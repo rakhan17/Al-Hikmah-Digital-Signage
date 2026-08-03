@@ -1,0 +1,36 @@
+{
+  "name": "al-hikmah-digital-signage",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k \"npm run server\" \"vite\"",
+    "server": "tsx watch server/index.js",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "adhan": "^4.4.4",
+    "better-sqlite3": "^13.0.2",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "lucide-react": "^1.28.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "concurrently": "^10.0.4",
+    "oxlint": "^1.75.0",
+    "tsx": "^4.23.5",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.0"
+  }
+}
