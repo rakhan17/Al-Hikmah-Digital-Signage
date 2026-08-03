@@ -67,7 +67,8 @@ export function App() {
         return;
       }
 
-      if (e.key === 'p' || e.key === 'P') {
+      // Shortcut 1: Shift + 1 -> Toggle Fullscreen Mode
+      if (e.shiftKey && (e.key === '1' || e.key === '!' || e.code === 'Digit1')) {
         e.preventDefault();
         if (!document.fullscreenElement) {
           document.documentElement.requestFullscreen().catch((err) => {
@@ -78,6 +79,12 @@ export function App() {
             document.exitFullscreen();
           }
         }
+      }
+
+      // Shortcut 2: Shift + 2 -> Toggle Admin Panel
+      if (e.shiftKey && (e.key === '2' || e.key === '@' || e.code === 'Digit2')) {
+        e.preventDefault();
+        setIsAdminOpen((prev) => !prev);
       }
     };
 
