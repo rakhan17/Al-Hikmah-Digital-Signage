@@ -21,6 +21,11 @@ app.use(express.json());
 const publicDir = path.join(__dirname, '../public');
 app.use(express.static(publicDir));
 
+const distDir = path.join(__dirname, '../dist');
+if (fs.existsSync(distDir)) {
+  app.use(express.static(distDir));
+}
+
 // -------------------------------------------------------------
 // DYNAMIC BANNER IMAGES API (Reads public/assets/bgbanner dynamically)
 // -------------------------------------------------------------
@@ -467,6 +472,14 @@ app.delete('/api/finances/:id', (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 });
+
+// Fallback for SPA routing in production dist mode
+if (fs.existsSync(distDir)) {
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(distDir, 'index.html'));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`===================================================`);
