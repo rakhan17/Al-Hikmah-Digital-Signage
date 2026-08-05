@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { MosqueEvent } from '../types/signage';
 
 interface EventCarouselProps {
@@ -199,6 +198,9 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
   };
 
   const getBgImage = (item: SlideItem, idx: number) => {
+    if (item.isDonation) {
+      return '/assets/qris.jpeg';
+    }
     const key = item.id !== undefined ? item.id : `idx-${idx}`;
     if (assignedImages[key]) {
       return assignedImages[key];
@@ -236,67 +238,67 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
               width: `${100 / totalCards}%`,
               height: '100%',
               backgroundImage: `url("${getBgImage(slideItem, idx)}")`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
             }}
           >
-            {/* SPECIAL DONATION POSTER SLIDE (5s duration) */}
+            {/* BRIGHT FULL-TRANSPARENT DONATION POSTER SLIDE (Uses /assets/qris.jpeg, Black Text, No Dark Overlay, No Cards) */}
             {slideItem.isDonation ? (
-              <div className="carousel-slide-overlay" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: '44px 52px' }}>
-                <div style={{ flex: 1, paddingRight: 32, textAlign: 'left' }}>
-                  <h2 className="carousel-title" style={{ fontSize: '2.5rem', color: '#ffffff', marginBottom: 12 }}>
-                    {slideItem.title}
-                  </h2>
-                  <div style={{ fontSize: '1.2rem', color: '#e4e4e7', fontWeight: 600, marginBottom: 18, textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>
-                    Salurkan infaq & sedekah terbaik Anda untuk kemakmuran masjid.
-                  </div>
-                  
-                  <div style={{
-                    background: 'rgba(10, 10, 12, 0.75)',
-                    backdropFilter: 'blur(16px)',
-                    padding: '16px 24px',
-                    borderRadius: 16,
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    display: 'inline-flex',
-                    flexDirection: 'column',
-                    gap: 8,
-                    textAlign: 'left',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.7)',
-                  }}>
-                    <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#a1a1aa', letterSpacing: '1px' }}>
-                      TRANSFER REKENING BANK:
-                    </div>
-                    <div style={{ fontSize: '1.15rem', color: '#ffffff', fontWeight: 800 }}>
-                      BSI: <span style={{ color: '#ffffff' }}>7123-4567-89</span> <span style={{ color: '#a1a1aa', fontWeight: 500, fontSize: '0.95rem' }}>(a.n. Masjid Al Hikmah)</span>
-                    </div>
-                    <div style={{ fontSize: '1.15rem', color: '#ffffff', fontWeight: 800 }}>
-                      Mandiri: <span style={{ color: '#ffffff' }}>149-00-1234567-8</span> <span style={{ color: '#a1a1aa', fontWeight: 500, fontSize: '0.95rem' }}>(a.n. Masjid Al Hikmah)</span>
-                    </div>
-                  </div>
+              <div style={{
+                width: '100%',
+                height: '100%',
+                background: 'transparent',
+                padding: '48px 60px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+                maxWidth: '65%',
+                textAlign: 'left',
+              }}>
+                <h2 style={{
+                  fontSize: '2.8rem',
+                  fontWeight: 900,
+                  color: '#000000',
+                  marginBottom: 16,
+                  lineHeight: 1.2,
+                  letterSpacing: '-0.5px',
+                }}>
+                  {slideItem.title}
+                </h2>
+
+                <div style={{
+                  fontSize: '1.25rem',
+                  fontWeight: 700,
+                  color: '#18181b',
+                  marginBottom: 24,
+                  lineHeight: 1.5,
+                }}>
+                  Salurkan infaq & sedekah terbaik Anda untuk kemakmuran dan operasional masjid.
                 </div>
 
-                {/* LARGE HIGH-CONTRAST QRIS BARCODE */}
+                {/* Direct Black Text Bank Account Details (No Card Box, Pure Clean Text) */}
                 <div style={{
-                  background: '#ffffff',
-                  padding: 16,
-                  borderRadius: 24,
-                  boxShadow: '0 16px 40px rgba(0,0,0,0.9)',
                   display: 'flex',
                   flexDirection: 'column',
-                  alignItems: 'center',
                   gap: 8,
-                  minWidth: 190,
+                  fontSize: '1.2rem',
+                  fontWeight: 800,
+                  color: '#000000',
                 }}>
-                  <img
-                    src="/assets/qris-dummy.svg"
-                    alt="QRIS Donasi Masjid"
-                    style={{ width: 160, height: 160, objectFit: 'contain' }}
-                  />
-                  <span style={{ fontSize: '0.72rem', fontWeight: 900, color: '#111111', letterSpacing: '1px' }}>
-                    SCAN QRIS ALL E-WALLET
-                  </span>
+                  <div style={{ fontSize: '0.9rem', color: '#3f3f46', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                    TRANSFER REKENING BANK:
+                  </div>
+                  <div>
+                    BSI: <span style={{ color: '#000000' }}>7123-4567-89</span> <span style={{ color: '#3f3f46', fontWeight: 600, fontSize: '1rem' }}>(a.n. Masjid Al Hikmah)</span>
+                  </div>
+                  <div>
+                    Mandiri: <span style={{ color: '#000000' }}>149-00-1234567-8</span> <span style={{ color: '#3f3f46', fontWeight: 600, fontSize: '1rem' }}>(a.n. Masjid Al Hikmah)</span>
+                  </div>
                 </div>
               </div>
             ) : (
-              /* REGULAR WELCOME / EVENT BANNER SLIDE */
+              /* REGULAR WELCOME / EVENT BANNER SLIDE (Dark Gradient Overlay, White Text) */
               <div className="carousel-slide-overlay">
                 <h2 className="carousel-title">{slideItem.title}</h2>
 
@@ -325,29 +327,6 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
           </div>
         ))}
       </div>
-
-      {/* Manual Left / Right Navigation Glass Arrow Buttons */}
-      {totalCards > 1 && (
-        <>
-          <button
-            onClick={handlePrev}
-            className="carousel-nav-btn prev"
-            title="Banner Sebelumnya (Panah Kiri)"
-            aria-label="Previous Slide"
-          >
-            <ChevronLeft size={24} />
-          </button>
-
-          <button
-            onClick={handleNext}
-            className="carousel-nav-btn next"
-            title="Banner Selanjutnya (Panah Kanan)"
-            aria-label="Next Slide"
-          >
-            <ChevronRight size={24} />
-          </button>
-        </>
-      )}
 
       {/* Synchronized Clickable Dot Indicators */}
       {totalCards > 1 && (
