@@ -82,7 +82,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       const res = await fetch('/api/settings');
       const json = await res.json();
       if (json.success) {
-        setSettingsForm(json.data || json.settings || {});
+        const data = json.data || json.settings || {};
+        setSettingsForm(data);
+        if (data.use_custom_datetime === 1) {
+          setShowAdvancedDevMode(true);
+        } else {
+          setShowAdvancedDevMode(false);
+        }
       }
     } catch {
       showToast('Gagal memuat pengaturan database', 'error');
@@ -148,20 +154,44 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     }
   };
 
-  const handleToggleDevModeSwitch = () => {
+  const handleToggleDevModeSwitch = async () => {
     if (!showAdvancedDevMode) {
       const pass = window.prompt('Masukkan Kode Verifikasi Teknisi (Password):');
       if (pass === '17oktober2009') {
+        const updated = { ...settingsForm, use_custom_datetime: 1 };
         setShowAdvancedDevMode(true);
-        setSettingsForm((prev) => ({ ...prev, use_custom_datetime: 1 }));
-        showToast('Akses Teknisi Diberikan! Mode Manual & Simulator Aktif.');
+        setSettingsForm(updated);
+
+        try {
+          await fetch('/api/settings', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updated),
+          });
+          onRefreshData();
+          showToast('Mode Lanjutan (Manual) Aktif & Tersimpan di Database!');
+        } catch {
+          showToast('Mode Lanjutan Aktif di Layar.', 'success');
+        }
       } else if (pass !== null) {
         showToast('Kode verifikasi salah! Akses ditolak.', 'error');
       }
     } else {
+      const updated = { ...settingsForm, use_custom_datetime: 0 };
       setShowAdvancedDevMode(false);
-      setSettingsForm((prev) => ({ ...prev, use_custom_datetime: 0 }));
-      showToast('Mode Lanjutan Dikunci Kembali (Mode Otomatis Real-Time).');
+      setSettingsForm(updated);
+
+      try {
+        await fetch('/api/settings', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updated),
+        });
+        onRefreshData();
+        showToast('Mode Lanjutan Dikunci & Kembali ke Mode Real-Time.');
+      } catch {
+        showToast('Mode Lanjutan Dikunci.', 'success');
+      }
     }
   };
 
