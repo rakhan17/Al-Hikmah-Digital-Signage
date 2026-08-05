@@ -249,53 +249,52 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
               backgroundPosition: 'center',
             }}
           >
-            {/* 1. BESPOKE CENTERED OPENING WELCOME BANNER (No dark gradient overlay, 100% centered text, golden Arabic calligraphy, crisp shadow) */}
+            {/* 1. ELEGANT BOTTOM-ALIGNED OPENING WELCOME BANNER (Keeps top 60% mosque arch completely clear, smooth bottom gradient for 100% legibility) */}
             {slideItem.isWelcome ? (
-              <div style={{
+              <div className="carousel-slide-overlay" style={{
                 width: '100%',
                 height: '100%',
-                background: 'transparent',
-                padding: '40px 60px',
+                background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.88) 85%)',
+                padding: '36px 48px',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                textAlign: 'center',
+                justifyContent: 'flex-end',
+                alignItems: 'flex-start',
+                textAlign: 'left',
               }}>
-                {/* Royal Golden Arabic Greeting */}
+                {/* Gold Arabic Calligraphy Greeting */}
                 <div style={{
                   fontFamily: "'Amiri', serif",
-                  fontSize: '3.6rem',
+                  fontSize: '2rem',
                   fontWeight: 700,
                   color: '#fef08a',
-                  marginBottom: 12,
-                  textShadow: '0 4px 25px rgba(0,0,0,0.95), 0 2px 8px rgba(0,0,0,0.9)',
-                  lineHeight: 1.2,
+                  marginBottom: 6,
+                  textShadow: '0 2px 10px rgba(0,0,0,0.9)',
                 }}>
                   أَهْلًا وَسَهْلًا وَمَرْحَبًا بِكُمْ
                 </div>
 
-                {/* Grand Centered Title */}
+                {/* Clean Main Title */}
                 <h2 style={{
-                  fontSize: '3.8rem',
-                  fontWeight: 900,
+                  fontSize: '2.8rem',
+                  fontWeight: 800,
                   color: '#ffffff',
-                  lineHeight: 1.15,
-                  marginBottom: 16,
-                  letterSpacing: '-1px',
-                  textShadow: '0 6px 30px rgba(0,0,0,0.95), 0 2px 10px rgba(0,0,0,0.9)',
+                  lineHeight: 1.2,
+                  marginBottom: 10,
+                  letterSpacing: '-0.5px',
+                  textShadow: '0 4px 20px rgba(0,0,0,0.9)',
                 }}>
                   {slideItem.title}
                 </h2>
 
-                {/* Clean Centered Description */}
+                {/* Clean Description */}
                 <p style={{
-                  fontSize: '1.35rem',
-                  fontWeight: 600,
-                  color: '#f4f4f5',
+                  fontSize: '1.2rem',
+                  fontWeight: 500,
+                  color: '#d4d4d8',
                   lineHeight: 1.5,
                   maxWidth: '850px',
-                  textShadow: '0 3px 15px rgba(0,0,0,0.95), 0 1px 5px rgba(0,0,0,0.9)',
+                  textShadow: '0 2px 10px rgba(0,0,0,0.9)',
                 }}>
                   {slideItem.description}
                 </p>
