@@ -55,7 +55,7 @@ body {
   display: flex;
   gap: 36px;
   flex: 1;
-  align-items: center;
+  align-items: stretch;
   overflow: hidden;
 }
 
@@ -159,24 +159,26 @@ body {
   border-radius: 6px;
 }
 
-/* Clock Sidebar Section (Right of Event Carousel) */
+/* Clock Sidebar Section (Right of Event Carousel, Top-Aligned) */
 .clock-sidebar-section {
   width: 360px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
-  gap: 16px;
+  gap: 8px;
 }
 
 .analog-clock-wrapper {
-  width: 240px;
-  height: 240px;
+  width: 220px;
+  height: 220px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  margin-top: 0;
 }
 
 .clock-info-box {
@@ -196,7 +198,7 @@ body {
   font-size: 1.15rem;
   font-weight: 600;
   color: #d4d4d8;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .clock-date-hijri {
@@ -210,11 +212,11 @@ body {
 .cardless-digital-clock {
   display: flex;
   align-items: baseline;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 .clock-num-digits {
-  font-size: 3.8rem;
+  font-size: 3.6rem;
   font-weight: 900;
   letter-spacing: 1px;
   font-variant-numeric: tabular-nums;
@@ -233,8 +235,8 @@ body {
 /* BRAUN GLASS CLOCK CSS STYLING                                 */
 /* ============================================================= */
 .glass-clock-container {
-  width: 240px;
-  height: 240px;
+  width: 220px;
+  height: 220px;
   position: relative;
   display: flex;
   align-items: center;
@@ -243,8 +245,8 @@ body {
 
 .glass-effect-wrapper {
   position: relative;
-  width: 230px;
-  height: 230px;
+  width: 210px;
+  height: 210px;
   border-radius: 50%;
 }
 
@@ -300,7 +302,7 @@ body {
   width: 1.5px;
   height: 6px;
   background: rgba(80, 80, 80, 0.4);
-  transform-origin: 50% 107px;
+  transform-origin: 50% 97px;
 }
 
 .clock-hand {
@@ -313,7 +315,7 @@ body {
 
 .hour-hand {
   width: 6px;
-  height: 52px;
+  height: 48px;
   margin-left: -3px;
   background: #18181b;
   z-index: 3;
@@ -321,7 +323,7 @@ body {
 
 .minute-hand {
   width: 4px;
-  height: 76px;
+  height: 70px;
   margin-left: -2px;
   background: #27272a;
   z-index: 3;
@@ -338,7 +340,7 @@ body {
   bottom: 50%;
   left: 50%;
   width: 2px;
-  height: 85px;
+  height: 78px;
   margin-left: -1px;
   background: #ea580c;
   transform-origin: 50% 100%;
@@ -349,7 +351,7 @@ body {
   top: 50%;
   left: 50%;
   width: 2px;
-  height: 18px;
+  height: 16px;
   margin-left: -1px;
   background: #ea580c;
 }
@@ -573,7 +575,7 @@ body {
   100% { transform: translate3d(-100%, 0, 0); }
 }
 
-/* Fullscreen Admin Sidebar Layout (z-index 999999 to cover screen 100%) */
+/* Fullscreen Admin Sidebar Layout */
 .admin-fullscreen-layout {
   position: fixed;
   inset: 0;
@@ -796,145 +798,4 @@ body {
   font-family: inherit;
   outline: none;
   transition: all 0.2s ease;
-}
-
-.form-control:focus {
-  border-color: #ffffff;
-}
-
-.btn-primary {
-  background: #ffffff;
-  border: none;
-  color: #000000;
-  padding: 12px 26px;
-  border-radius: 12px;
-  font-weight: 700;
-  font-size: 0.95rem;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  line-height: 1;
-  transition: all 0.2s ease;
-}
-
-.btn-primary:hover {
-  background: #e4e4e7;
-}
-
-.btn-danger {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  line-height: 1;
-  transition: all 0.2s ease;
-}
-
-.btn-danger:hover {
-  background: #ffffff;
-  color: #000000;
-}
-
-/* Stat Cards */
-.stat-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.stat-card {
-  padding: 28px;
-  border-radius: 20px;
-  background: #121215;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.stat-label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  letter-spacing: 0.5px;
-}
-
-.stat-value {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #ffffff;
-  margin-top: 8px;
-}
-
-/* Data Tables */
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 12px;
-}
-
-.data-table th, .data-table td {
-  padding: 16px 20px;
-  text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.data-table th {
-  background: #18181b;
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.pill-badge {
-  padding: 4px 12px;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.pill-badge.income {
-  background: #ffffff;
-  color: #000000;
-}
-
-.pill-badge.expense {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* Status toggle button for running text list */
-.status-toggle-btn {
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  line-height: 1;
-  transition: all 0.2s ease;
-}
-
-.status-toggle-btn.active {
-  background: #ffffff;
-  color: #000000;
-}
-
-.status-toggle-btn.inactive {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text-muted);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }

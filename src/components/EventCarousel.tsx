@@ -160,6 +160,37 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
               backgroundImage: `url("${getBgImage(eventItem, idx)}")`,
             }}
           >
+            {/* Top-Left Corner Official Mosque Emblem Glass Pill Badge */}
+            <div style={{
+              position: 'absolute',
+              top: 24,
+              left: 28,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              background: 'rgba(10, 10, 12, 0.65)',
+              backdropFilter: 'blur(16px)',
+              padding: '8px 18px 8px 12px',
+              borderRadius: 30,
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              zIndex: 10,
+              boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
+            }}>
+              <img
+                src="/assets/alhikmah.png"
+                alt="Logo Masjid Al Hikmah"
+                style={{ width: 44, height: 44, objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.5))' }}
+              />
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.3px', lineHeight: 1.2 }}>
+                  MASJID AL HIKMAH
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#a1a1aa', fontWeight: 700, letterSpacing: '0.5px' }}>
+                  BALIKPAPAN SELATAN
+                </div>
+              </div>
+            </div>
+
             <div className="carousel-slide-overlay">
               <h2 className="carousel-title">{eventItem.title}</h2>
 

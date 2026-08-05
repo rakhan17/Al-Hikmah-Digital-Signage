@@ -167,25 +167,12 @@ export function App() {
           </div>
 
           <div className="clock-sidebar-section">
-            {/* Braun Analog Glass Clock */}
+            {/* Top-Aligned Braun Analog Glass Clock */}
             <div className="analog-clock-wrapper">
               <GlassClock targetDate={activeClockTime} />
             </div>
 
             <div className="clock-info-box">
-              {/* Prominent Mosque Logo Above Title */}
-              <img
-                src="/assets/alhikmah.png"
-                alt="Logo Masjid Al Hikmah"
-                style={{
-                  width: 56,
-                  height: 56,
-                  objectFit: 'contain',
-                  marginBottom: 6,
-                  filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.6))',
-                }}
-              />
-
               <h1 className="clock-brand-title">
                 {data.settings.mosque_name || 'Masjid Al Hikmah'}
               </h1>
@@ -198,43 +185,68 @@ export function App() {
               </div>
             </div>
 
-            {/* Option 1: QRIS Donation Glass Card */}
+            {/* Spacious QRIS & Bank Account Donation Glass Card (Expanded Bottom Space) */}
             <div style={{
               background: 'rgba(255, 255, 255, 0.04)',
               backdropFilter: 'blur(16px)',
               border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: 16,
-              padding: '10px 16px',
+              borderRadius: 20,
+              padding: '14px 18px',
               display: 'flex',
-              alignItems: 'center',
-              gap: 14,
+              flexDirection: 'column',
+              gap: 10,
               width: '100%',
-              marginTop: 4,
-              boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+              marginTop: 'auto',
+              boxShadow: '0 12px 30px rgba(0,0,0,0.6)',
             }}>
-              <div style={{
-                background: '#ffffff',
-                padding: 4,
-                borderRadius: 8,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                <img
-                  src="/assets/qris-dummy.svg"
-                  alt="QRIS Donasi"
-                  style={{ width: 48, height: 48, objectFit: 'contain' }}
-                />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                <div style={{
+                  background: '#ffffff',
+                  padding: 6,
+                  borderRadius: 12,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+                }}>
+                  <img
+                    src="/assets/qris-dummy.svg"
+                    alt="QRIS Donasi"
+                    style={{ width: 64, height: 64, objectFit: 'contain' }}
+                  />
+                </div>
+
+                <div style={{ textAlign: 'left', flex: 1 }}>
+                  <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.5px', lineHeight: 1.2 }}>
+                    INFAQ & DONASI MASJID
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: '#a1a1aa', fontWeight: 600, marginTop: 4 }}>
+                    Scan QRIS / Transfer Bank
+                  </div>
+                  <div style={{ fontSize: '0.65rem', color: '#71717a', marginTop: 2, fontWeight: 500 }}>
+                    BCA • Mandiri • GoPay • OVO • Dana
+                  </div>
+                </div>
               </div>
-              <div style={{ textAlign: 'left', flex: 1 }}>
-                <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.5px' }}>
-                  INFAQ & DONASI QRIS
+
+              {/* Bank Account Numbers Section */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                padding: '8px 12px',
+                borderRadius: 10,
+                border: '1px solid rgba(255, 255, 255, 0.05)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: '0.72rem',
+                color: '#d4d4d8',
+                fontWeight: 600,
+                textAlign: 'left',
+              }}>
+                <div>
+                  <span style={{ color: '#a1a1aa' }}>BSI:</span> 7123-4567-89
                 </div>
-                <div style={{ fontSize: '0.7rem', color: '#a1a1aa', fontWeight: 600, marginTop: 2 }}>
-                  Scan via Bank & E-Wallet
-                </div>
-                <div style={{ fontSize: '0.62rem', color: '#71717a', marginTop: 2, fontWeight: 500 }}>
-                  BCA • Mandiri • GoPay • OVO • Dana
+                <div>
+                  <span style={{ color: '#a1a1aa' }}>Mandiri:</span> 149-00-1234567-8
                 </div>
               </div>
             </div>
