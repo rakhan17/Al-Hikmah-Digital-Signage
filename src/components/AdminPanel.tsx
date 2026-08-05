@@ -14,6 +14,8 @@ import {
   XCircle,
   ToggleLeft,
   ToggleRight,
+  ShieldAlert,
+  AlertTriangle,
 } from 'lucide-react';
 import type { MosqueEvent, FinanceRecord, FinanceSummary } from '../types/signage';
 
@@ -31,6 +33,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   initialTab = 'settings',
 }) => {
   const [activeTab, setActiveTab] = useState<'settings' | 'events' | 'finances'>(initialTab);
+  const [showAdvancedDevMode, setShowAdvancedDevMode] = useState(false);
 
   useEffect(() => {
     if (initialTab) {
@@ -339,7 +342,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         <header className="workspace-header">
           <div>
             <h1 className="workspace-title">
-              {activeTab === 'settings' && 'Pengaturan Waktu Shalat, Shalat Jumat & Custom Waktu'}
+              {activeTab === 'settings' && 'Pengaturan Waktu Shalat & Layar Signage'}
               {activeTab === 'events' && 'Manajemen Agenda & Kajian Masjid'}
               {activeTab === 'finances' && 'Manajemen Kas & Laporan Keuangan'}
             </h1>
@@ -360,97 +363,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           {/* TAB 1: SETTINGS */}
           {activeTab === 'settings' && (
             <form onSubmit={handleSaveSettings} className="admin-card">
-              {/* CUSTOM TIME & DATE SIMULATOR */}
-              <div className="card-section-title">Simulator Pengujian Waktu Custom (Pengujian Layar Adzan/Iqomah/Jumat)</div>
-              <p className="card-section-hint">Gunakan fitur ini untuk mengetes simulasi waktu tanpa mengubah jam sistem komputer masjid.</p>
-              
-              <div className="grid-3col" style={{ marginBottom: 24, background: 'rgba(255,255,255,0.03)', padding: 20, borderRadius: 16, border: '1px solid rgba(255,255,255,0.08)' }}>
-                <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label>Status Custom Simulator</label>
-                  <button
-                    type="button"
-                    onClick={() => setSettingsForm({ ...settingsForm, use_custom_datetime: settingsForm.use_custom_datetime === 1 ? 0 : 1 })}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      padding: '10px 16px',
-                      background: settingsForm.use_custom_datetime === 1 ? '#ffffff' : '#18181b',
-                      color: settingsForm.use_custom_datetime === 1 ? '#000000' : '#ffffff',
-                      border: '1px solid rgba(255,255,255,0.2)',
-                      borderRadius: 12,
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      width: '100%',
-                    }}
-                  >
-                    {settingsForm.use_custom_datetime === 1 ? <ToggleRight size={22} /> : <ToggleLeft size={22} />}
-                    <span>{settingsForm.use_custom_datetime === 1 ? 'Aktif (Custom Mode)' : 'Nonaktif (Waktu Real)'}</span>
-                  </button>
-                </div>
-                <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label>Tanggal Custom</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    value={settingsForm.custom_date ?? ''}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, custom_date: e.target.value })}
-                  />
-                </div>
-                <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label>Jam Custom (HH:mm)</label>
-                  <input
-                    type="time"
-                    className="form-control"
-                    value={settingsForm.custom_time ?? ''}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, custom_time: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              {/* PROFIL & KOORDINAT LOKASI */}
-              <div className="card-section-title">Profil & Koordinat Lokasi</div>
-              <div className="grid-2col">
-                <div className="form-group">
-                  <label>Nama Masjid</label>
-                  <input
-                    className="form-control"
-                    value={settingsForm.mosque_name ?? ''}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, mosque_name: e.target.value })}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Alamat Singkat</label>
-                  <input
-                    className="form-control"
-                    value={settingsForm.address ?? ''}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, address: e.target.value })}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Latitude (Garis Lintang)</label>
-                  <input
-                    type="number"
-                    step="any"
-                    className="form-control"
-                    value={settingsForm.latitude ?? ''}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, latitude: e.target.value === '' ? '' : parseFloat(e.target.value) })}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Longitude (Garis Bujur)</label>
-                  <input
-                    type="number"
-                    step="any"
-                    className="form-control"
-                    value={settingsForm.longitude ?? ''}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, longitude: e.target.value === '' ? '' : parseFloat(e.target.value) })}
-                  />
-                </div>
-              </div>
-
               {/* SPECIAL FRIDAY PRAYER SETTINGS (SINGLE ADZAN WORKFLOW) */}
-              <div className="card-section-title" style={{ marginTop: 32 }}>Pengaturan Khusus Shalat Jumat</div>
+              <div className="card-section-title">Pengaturan Khusus Shalat Jumat</div>
               <p className="card-section-hint">Atur jam dan durasi alur Shalat Jumat (Adzan Shalat Jumat ➔ Jeda + Adab Khutbah ➔ Khutbah & Shalat Jumat).</p>
               
               <div className="form-group" style={{ maxWidth: '400px', marginBottom: 20 }}>
@@ -569,6 +483,152 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     />
                   </div>
                 ))}
+              </div>
+
+              {/* DANGER / DEVELOPER ZONE TOGGLE FOR SENSITIVE OPTIONS */}
+              <div style={{ marginTop: 40, paddingTop: 28, borderTop: '1px dashed rgba(255,255,255,0.12)' }}>
+                {!showAdvancedDevMode ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowAdvancedDevMode(true)}
+                    style={{
+                      width: '100%',
+                      padding: '14px 20px',
+                      borderRadius: 14,
+                      fontSize: '0.95rem',
+                      fontWeight: 800,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 10,
+                      background: 'rgba(239, 68, 68, 0.12)',
+                      border: '1px solid rgba(239, 68, 68, 0.35)',
+                      color: '#f87171',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    <ShieldAlert size={20} />
+                    <span>Developer Testing & Technical Zone (Pengaturan Lanjutan Khusus Teknisi)</span>
+                  </button>
+                ) : (
+                  <div style={{
+                    background: 'rgba(239, 68, 68, 0.06)',
+                    border: '1px solid rgba(239, 68, 68, 0.25)',
+                    borderRadius: 20,
+                    padding: 28,
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#f87171', fontWeight: 800, fontSize: '1.05rem' }}>
+                        <AlertTriangle size={20} />
+                        <span>AREA LANJUTAN & SIMULATOR TEKNIS</span>
+                      </div>
+                      <button
+                        type="button"
+                        className="btn-secondary"
+                        onClick={() => setShowAdvancedDevMode(false)}
+                        style={{ padding: '6px 14px', fontSize: '0.82rem' }}
+                      >
+                        Sembunyikan / Kunci Mode Lanjutan
+                      </button>
+                    </div>
+
+                    {/* CUSTOM TIME & DATE SIMULATOR */}
+                    <div className="card-section-title" style={{ fontSize: '1.05rem', color: '#fca5a5' }}>
+                      Simulator Pengujian Waktu Custom (Pengujian Layar Adzan/Iqomah/Jumat)
+                    </div>
+                    <p className="card-section-hint" style={{ color: '#f87171' }}>
+                      Perhatian: Gunakan fitur ini HANYA untuk menguji simulasi waktu tanpa mengubah jam sistem komputer masjid.
+                    </p>
+                    
+                    <div className="grid-3col" style={{ marginBottom: 28, background: 'rgba(0,0,0,0.4)', padding: 18, borderRadius: 16, border: '1px solid rgba(239,68,68,0.2)' }}>
+                      <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label>Status Custom Simulator</label>
+                        <button
+                          type="button"
+                          onClick={() => setSettingsForm({ ...settingsForm, use_custom_datetime: settingsForm.use_custom_datetime === 1 ? 0 : 1 })}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 8,
+                            padding: '10px 16px',
+                            background: settingsForm.use_custom_datetime === 1 ? '#ffffff' : '#18181b',
+                            color: settingsForm.use_custom_datetime === 1 ? '#000000' : '#ffffff',
+                            border: '1px solid rgba(255,255,255,0.2)',
+                            borderRadius: 12,
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            width: '100%',
+                          }}
+                        >
+                          {settingsForm.use_custom_datetime === 1 ? <ToggleRight size={22} /> : <ToggleLeft size={22} />}
+                          <span>{settingsForm.use_custom_datetime === 1 ? 'Aktif (Custom Mode)' : 'Nonaktif (Waktu Real)'}</span>
+                        </button>
+                      </div>
+                      <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label>Tanggal Custom</label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          value={settingsForm.custom_date ?? ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, custom_date: e.target.value })}
+                        />
+                      </div>
+                      <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label>Jam Custom (HH:mm)</label>
+                        <input
+                          type="time"
+                          className="form-control"
+                          value={settingsForm.custom_time ?? ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, custom_time: e.target.value })}
+                        />
+                      </div>
+                    </div>
+
+                    {/* PROFIL & KOORDINAT LOKASI */}
+                    <div className="card-section-title" style={{ fontSize: '1.05rem', color: '#fca5a5' }}>
+                      Profil & Koordinat Lokasi GPS Masjid
+                    </div>
+                    <div className="grid-2col">
+                      <div className="form-group">
+                        <label>Nama Masjid</label>
+                        <input
+                          className="form-control"
+                          value={settingsForm.mosque_name ?? ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, mosque_name: e.target.value })}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Alamat Singkat</label>
+                        <input
+                          className="form-control"
+                          value={settingsForm.address ?? ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, address: e.target.value })}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Latitude (Garis Lintang)</label>
+                        <input
+                          type="number"
+                          step="any"
+                          className="form-control"
+                          value={settingsForm.latitude ?? ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, latitude: e.target.value === '' ? '' : parseFloat(e.target.value) })}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Longitude (Garis Bujur)</label>
+                        <input
+                          type="number"
+                          step="any"
+                          className="form-control"
+                          value={settingsForm.longitude ?? ''}
+                          onChange={(e) => setSettingsForm({ ...settingsForm, longitude: e.target.value === '' ? '' : parseFloat(e.target.value) })}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div style={{ marginTop: 28 }}>
