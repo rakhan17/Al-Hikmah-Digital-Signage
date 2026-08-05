@@ -247,8 +247,69 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
               backgroundPosition: 'center',
             }}
           >
-            {/* BRIGHT FULL-TRANSPARENT DONATION POSTER SLIDE (Uses /assets/qris.jpeg, Black Text, No Dark Overlay, No Cards) */}
-            {slideItem.isDonation ? (
+            {/* 1. CUSTOM OPENING WELCOME BANNER (uses opening.jpeg, glass tag badge, grand title, arabic calligraphy, no rigid event metadata) */}
+            {slideItem.isWelcome ? (
+              <div className="carousel-slide-overlay" style={{
+                background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.88) 85%)',
+                padding: '44px 52px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                alignItems: 'flex-start',
+                textAlign: 'left',
+              }}>
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.12)',
+                  backdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  padding: '6px 16px',
+                  borderRadius: 20,
+                  fontSize: '0.85rem',
+                  fontWeight: 800,
+                  color: '#ffffff',
+                  letterSpacing: '1.5px',
+                  marginBottom: 12,
+                  textTransform: 'uppercase',
+                }}>
+                  UCAPAN SELAMAT DATANG & HIMBAUAN
+                </div>
+
+                <h2 style={{
+                  fontSize: '3.2rem',
+                  fontWeight: 900,
+                  color: '#ffffff',
+                  lineHeight: 1.15,
+                  marginBottom: 8,
+                  textShadow: '0 4px 20px rgba(0,0,0,0.9)',
+                  letterSpacing: '-0.5px',
+                }}>
+                  {slideItem.title}
+                </h2>
+
+                <div style={{
+                  fontFamily: "'Amiri', serif",
+                  fontSize: '1.8rem',
+                  fontWeight: 700,
+                  color: '#e4e4e7',
+                  marginBottom: 12,
+                  textShadow: '0 2px 10px rgba(0,0,0,0.8)',
+                }}>
+                  أَهْلًا وَسَهْلًا وَمَرْحَبًا بِكُمْ
+                </div>
+
+                <p style={{
+                  fontSize: '1.25rem',
+                  fontWeight: 500,
+                  color: '#d4d4d8',
+                  lineHeight: 1.5,
+                  maxWidth: '850px',
+                  textShadow: '0 2px 10px rgba(0,0,0,0.9)',
+                }}>
+                  {slideItem.description}
+                </p>
+              </div>
+            ) : slideItem.isDonation ? (
+              /* 2. BRIGHT FULL-TRANSPARENT DONATION POSTER SLIDE (Uses /assets/qris.jpeg, Black Text, No Dark Overlay, No Cards) */
               <div style={{
                 width: '100%',
                 height: '100%',
@@ -303,7 +364,7 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
                 </div>
               </div>
             ) : (
-              /* REGULAR WELCOME (opening.jpeg) / EVENT BANNER SLIDE (Dark Gradient Overlay, White Text) */
+              /* 3. REGULAR EVENT BANNER SLIDE (Dark Gradient Overlay, White Text) */
               <div className="carousel-slide-overlay">
                 <h2 className="carousel-title">{slideItem.title}</h2>
 
