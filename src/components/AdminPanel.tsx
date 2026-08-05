@@ -80,7 +80,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     try {
       const res = await fetch('/api/settings');
       const json = await res.json();
-      if (json.success) {
+      if (json.success && json.settings) {
         setSettingsForm(json.settings);
       }
     } catch {
@@ -92,7 +92,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     try {
       const res = await fetch('/api/events');
       const json = await res.json();
-      if (json.success) {
+      if (json.success && Array.isArray(json.events)) {
         setEventsList(json.events);
       }
     } catch {
@@ -105,8 +105,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       const res = await fetch('/api/finances');
       const json = await res.json();
       if (json.success) {
-        setFinanceRecords(json.finances);
-        setFinanceSummary(json.summary);
+        setFinanceRecords(Array.isArray(json.finances) ? json.finances : []);
+        setFinanceSummary(json.summary || { totalIncome: 0, totalExpense: 0, balance: 0 });
       }
     } catch {
       showToast('Gagal memuat laporan keuangan', 'error');
@@ -281,6 +281,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     maghrib: 7,
     isya: 10,
   };
+
+  const safeTotalIncome = (financeSummary && typeof financeSummary.totalIncome === 'number') ? financeSummary.totalIncome : 0;
+  const safeTotalExpense = (financeSummary && typeof financeSummary.totalExpense === 'number') ? financeSummary.totalExpense : 0;
+  const safeBalance = (financeSummary && typeof financeSummary.balance === 'number') ? financeSummary.balance : 0;
+  const safeMonthlyIncome = financeSummary?.monthlyIncome;
+  const safeMonthlyExpense = financeSummary?.monthlyExpense;
 
   return (
     <div className="admin-fullscreen-layout">
@@ -648,7 +654,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {eventsList.map((evt) => (
+                    {(eventsList || []).map((evt) => (
                       <tr key={evt.id}>
                         <td style={{ fontWeight: 700, color: '#ffffff' }}>{evt.title}</td>
                         <td style={{ color: '#d4d4d8' }}>{evt.speaker || '-'}</td>
@@ -661,7 +667,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         </td>
                       </tr>
                     ))}
-                    {eventsList.length === 0 && (
+                    {(!eventsList || eventsList.length === 0) && (
                       <tr>
                         <td colSpan={5} style={{ textAlign: 'center', color: '#94a3b8', padding: '30px' }}>
                           Belum ada agenda terdaftar.
@@ -681,29 +687,29 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 <div className="stat-card">
                   <div className="stat-label">TOTAL PEMASUKAN</div>
                   <div className="stat-value" style={{ color: '#ffffff' }}>
-                    Rp {financeSummary.totalIncome.toLocaleString('id-ID')}
+                    Rp {safeTotalIncome.toLocaleString('id-ID')}
                   </div>
-                  {financeSummary.monthlyIncome !== undefined && (
+                  {safeMonthlyIncome !== undefined && (
                     <div style={{ fontSize: '0.82rem', color: '#a1a1aa', marginTop: 4 }}>
-                      Bulan Ini: Rp {financeSummary.monthlyIncome.toLocaleString('id-ID')}
+                      Bulan Ini: Rp {(safeMonthlyIncome || 0).toLocaleString('id-ID')}
                     </div>
                   )}
                 </div>
                 <div className="stat-card">
                   <div className="stat-label">TOTAL PENGELUARAN</div>
                   <div className="stat-value" style={{ color: '#d4d4d8' }}>
-                    Rp {financeSummary.totalExpense.toLocaleString('id-ID')}
+                    Rp {safeTotalExpense.toLocaleString('id-ID')}
                   </div>
-                  {financeSummary.monthlyExpense !== undefined && (
+                  {safeMonthlyExpense !== undefined && (
                     <div style={{ fontSize: '0.82rem', color: '#a1a1aa', marginTop: 4 }}>
-                      Bulan Ini: Rp {financeSummary.monthlyExpense.toLocaleString('id-ID')}
+                      Bulan Ini: Rp {(safeMonthlyExpense || 0).toLocaleString('id-ID')}
                     </div>
                   )}
                 </div>
                 <div className="stat-card">
                   <div className="stat-label">SALDO KAS SAAT INI</div>
                   <div className="stat-value" style={{ color: '#ffffff' }}>
-                    Rp {financeSummary.balance.toLocaleString('id-ID')}
+                    Rp {safeBalance.toLocaleString('id-ID')}
                   </div>
                 </div>
               </div>
@@ -798,7 +804,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {financeRecords.map((fin) => (
+                    {(financeRecords || []).map((fin) => (
                       <tr key={fin.id}>
                         <td>{fin.date}</td>
                         <td>
@@ -809,7 +815,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         <td style={{ color: '#cbd5e1' }}>{fin.category}</td>
                         <td style={{ color: '#ffffff', fontWeight: 600 }}>{fin.description}</td>
                         <td style={{ fontWeight: 800, color: fin.type === 'income' ? '#ffffff' : '#d4d4d8' }}>
-                          {fin.type === 'income' ? '+' : '-'} Rp {fin.amount.toLocaleString('id-ID')}
+                          {fin.type === 'income' ? '+' : '-'} Rp {(fin.amount || 0).toLocaleString('id-ID')}
                         </td>
                         <td style={{ textAlign: 'right' }}>
                           <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
@@ -831,7 +837,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         </td>
                       </tr>
                     ))}
-                    {financeRecords.length === 0 && (
+                    {(!financeRecords || financeRecords.length === 0) && (
                       <tr>
                         <td colSpan={6} style={{ textAlign: 'center', color: '#94a3b8', padding: '30px' }}>
                           Belum ada catatan transaksi keuangan.
