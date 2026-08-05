@@ -39,15 +39,15 @@ export const AdhanIqomahOverlay: React.FC<AdhanIqomahOverlayProps> = ({
     <div className="overlay-backdrop">
       <div className="overlay-cinematic-container">
         {/* Mosque Official Emblem Logo Header */}
-        <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'center' }}>
+        <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'center' }}>
           <img
             src="/assets/alhikmah.png"
             alt="Logo Masjid Al Hikmah"
             style={{
-              width: 72,
-              height: 72,
+              width: 140,
+              height: 140,
               objectFit: 'contain',
-              filter: 'drop-shadow(0 6px 16px rgba(0,0,0,0.6))',
+              filter: 'drop-shadow(0 8px 24px rgba(0,0,0,0.75))',
             }}
           />
         </div>
