@@ -185,62 +185,51 @@ export function App() {
               </div>
             </div>
 
-            {/* Spacious QRIS & Bank Account Donation Glass Card (Expanded Bottom Space) */}
+            {/* Direct Prominent Large QRIS & Donation Section (NO CARD BORDER, VERY LARGE QRIS BARCODE) */}
             <div style={{
-              background: 'rgba(255, 255, 255, 0.04)',
-              backdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: 20,
-              padding: '14px 18px',
+              marginTop: 'auto',
+              width: '100%',
               display: 'flex',
               flexDirection: 'column',
-              gap: 10,
-              width: '100%',
-              marginTop: 'auto',
-              boxShadow: '0 12px 30px rgba(0,0,0,0.6)',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                <div style={{
-                  background: '#ffffff',
-                  padding: 6,
-                  borderRadius: 12,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-                }}>
-                  <img
-                    src="/assets/qris-dummy.svg"
-                    alt="QRIS Donasi"
-                    style={{ width: 64, height: 64, objectFit: 'contain' }}
-                  />
-                </div>
+              {/* LARGE HIGH-CONTRAST QRIS BARCODE */}
+              <div style={{
+                background: '#ffffff',
+                padding: 10,
+                borderRadius: 18,
+                boxShadow: '0 14px 35px rgba(0,0,0,0.85)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <img
+                  src="/assets/qris-dummy.svg"
+                  alt="QRIS Donasi Masjid"
+                  style={{ width: 135, height: 135, objectFit: 'contain' }}
+                />
+              </div>
 
-                <div style={{ textAlign: 'left', flex: 1 }}>
-                  <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.5px', lineHeight: 1.2 }}>
-                    INFAQ & DONASI MASJID
-                  </div>
-                  <div style={{ fontSize: '0.72rem', color: '#a1a1aa', fontWeight: 600, marginTop: 4 }}>
-                    Scan QRIS / Transfer Bank
-                  </div>
-                  <div style={{ fontSize: '0.65rem', color: '#71717a', marginTop: 2, fontWeight: 500 }}>
-                    BCA • Mandiri • GoPay • OVO • Dana
-                  </div>
+              {/* CLEAN BOLD DONATION LABELS */}
+              <div style={{ textAlign: 'center', marginTop: 2 }}>
+                <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.5px' }}>
+                  INFAQ & DONASI QRIS
+                </div>
+                <div style={{ fontSize: '0.72rem', color: '#a1a1aa', fontWeight: 600, marginTop: 1 }}>
+                  BCA • Mandiri • GoPay • OVO • Dana
                 </div>
               </div>
 
-              {/* Bank Account Numbers Section */}
+              {/* DIRECT BANK ACCOUNT DETAILS */}
               <div style={{
-                background: 'rgba(255, 255, 255, 0.03)',
-                padding: '8px 12px',
-                borderRadius: 10,
-                border: '1px solid rgba(255, 255, 255, 0.05)',
                 display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: '0.72rem',
-                color: '#d4d4d8',
-                fontWeight: 600,
-                textAlign: 'left',
+                gap: 14,
+                fontSize: '0.78rem',
+                color: '#f4f4f5',
+                fontWeight: 700,
+                marginTop: 2,
               }}>
                 <div>
                   <span style={{ color: '#a1a1aa' }}>BSI:</span> 7123-4567-89
