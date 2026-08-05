@@ -69,6 +69,7 @@ export function GlassClock({ targetDate }: GlassClockProps): React.ReactElement 
           const x = 50 + Math.sin(angleRad) * radiusPercent;
           const y = 50 - Math.cos(angleRad) * radiusPercent;
 
+          hourNumber.style.position = 'absolute';
           hourNumber.style.left = `${x}%`;
           hourNumber.style.top = `${y}%`;
           hourNumber.style.transform = 'translate(-50%, -50%)';
@@ -178,24 +179,24 @@ export function GlassClock({ targetDate }: GlassClockProps): React.ReactElement 
           <div className="glass-reflection" />
           <div className="glass-reflection-overlay" ref={reflectionOverlayRef} />
 
-          {/* Mosque Official Emblem Logo inside Clock Dial */}
+          {/* Mosque Official Emblem Logo inside Clock Dial (Positioned cleanly below 12) */}
           <div style={{
             position: 'absolute',
-            top: '32%',
+            top: '26%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
             pointerEvents: 'none',
-            opacity: 0.88,
+            opacity: 0.85,
             zIndex: 1,
           }}>
             <img
               src="/assets/alhikmah.png"
               alt="Logo Masjid Al Hikmah"
               style={{
-                width: 50,
-                height: 50,
+                width: 32,
+                height: 32,
                 objectFit: 'contain',
-                filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.4))',
+                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
               }}
             />
           </div>
