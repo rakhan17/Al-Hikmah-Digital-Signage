@@ -12,7 +12,6 @@ import {
   CheckCircle,
   AlertCircle,
   XCircle,
-  Clock,
   ToggleLeft,
   ToggleRight,
 } from 'lucide-react';
@@ -22,14 +21,22 @@ interface AdminPanelProps {
   isOpen: boolean;
   onClose: () => void;
   onRefreshData: () => void;
+  initialTab?: 'settings' | 'events' | 'finances';
 }
 
 export const AdminPanel: React.FC<AdminPanelProps> = ({
   isOpen,
   onClose,
   onRefreshData,
+  initialTab = 'settings',
 }) => {
-  const [activeTab, setActiveTab] = useState<'settings' | 'events' | 'finances'>('settings');
+  const [activeTab, setActiveTab] = useState<'settings' | 'events' | 'finances'>(initialTab);
+
+  useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab, isOpen]);
 
   // Settings State
   const [settingsForm, setSettingsForm] = useState<Record<string, any>>({});
@@ -51,8 +58,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     totalIncome: 0,
     totalExpense: 0,
     balance: 0,
-    monthlyIncome: 0,
-    monthlyExpense: 0,
   });
   const [editingFinanceId, setEditingFinanceId] = useState<number | null>(null);
   const [newFinance, setNewFinance] = useState({
@@ -63,15 +68,23 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     date: new Date().toISOString().split('T')[0],
   });
 
+  // UI Toast State
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = (text: string, type: 'success' | 'error' = 'success') => {
+    setMessage({ text, type });
+    setTimeout(() => setMessage(null), 3500);
+  };
 
   const fetchSettings = async () => {
     try {
       const res = await fetch('/api/settings');
       const json = await res.json();
-      if (json.success) setSettingsForm(json.data || {});
-    } catch (err) {
-      console.error(err);
+      if (json.success) {
+        setSettingsForm(json.settings);
+      }
+    } catch {
+      showToast('Gagal memuat pengaturan database', 'error');
     }
   };
 
@@ -79,9 +92,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     try {
       const res = await fetch('/api/events');
       const json = await res.json();
-      if (json.success) setEventsList(json.data);
-    } catch (err) {
-      console.error(err);
+      if (json.success) {
+        setEventsList(json.events);
+      }
+    } catch {
+      showToast('Gagal memuat daftar agenda', 'error');
     }
   };
 
@@ -90,11 +105,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       const res = await fetch('/api/finances');
       const json = await res.json();
       if (json.success) {
-        setFinanceRecords(json.data.records);
-        setFinanceSummary(json.data.summary);
+        setFinanceRecords(json.finances);
+        setFinanceSummary(json.summary);
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
+      showToast('Gagal memuat laporan keuangan', 'error');
     }
   };
 
@@ -106,42 +121,34 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     }
   }, [isOpen]);
 
-  const showToast = (text: string, type: 'success' | 'error' = 'success') => {
-    setMessage({ text, type });
-    setTimeout(() => setMessage(null), 3500);
-  };
-
-  const handleNumChange = (field: string, val: string) => {
-    if (val === '') {
-      setSettingsForm((prev) => ({ ...prev, [field]: '' }));
-    } else {
-      const parsed = parseInt(val, 10);
-      setSettingsForm((prev) => ({ ...prev, [field]: isNaN(parsed) ? '' : parsed }));
-    }
-  };
-
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     setSavingSettings(true);
     try {
       const res = await fetch('/api/settings', {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settingsForm),
       });
       const json = await res.json();
       if (json.success) {
-        setSettingsForm(json.data || {});
-        showToast('Pengaturan berhasil diperbarui!');
+        showToast('Seluruh pengaturan berhasil disimpan!');
         onRefreshData();
       } else {
         showToast(json.message || 'Gagal menyimpan pengaturan', 'error');
       }
     } catch {
-      showToast('Terjadi kesalahan jaringan', 'error');
+      showToast('Koneksi server terganggu', 'error');
     } finally {
       setSavingSettings(false);
     }
+  };
+
+  const handleNumChange = (field: string, val: string) => {
+    setSettingsForm({
+      ...settingsForm,
+      [field]: val === '' ? '' : parseInt(val, 10),
+    });
   };
 
   const handleAddEvent = async (e: React.FormEvent) => {
@@ -154,48 +161,61 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       });
       const json = await res.json();
       if (json.success) {
-        showToast('Acara baru berhasil ditambahkan!');
-        setNewEvent({ title: '', speaker: '', event_date: '', event_time: '', description: '' });
+        showToast('Agenda baru berhasil ditambahkan!');
+        setNewEvent({
+          title: '',
+          speaker: '',
+          event_date: '',
+          event_time: '',
+          description: '',
+        });
         fetchEvents();
         onRefreshData();
       } else {
         showToast(json.message, 'error');
       }
     } catch {
-      showToast('Gagal menambah acara', 'error');
+      showToast('Gagal menambah agenda', 'error');
     }
   };
 
   const handleDeleteEvent = async (id: number) => {
-    if (!confirm('Hapus acara ini?')) return;
+    if (!confirm('Hapus agenda ini dari tayangan TV?')) return;
     try {
       const res = await fetch(`/api/events/${id}`, { method: 'DELETE' });
       const json = await res.json();
       if (json.success) {
-        showToast('Acara berhasil dihapus!');
+        showToast('Agenda berhasil dihapus!');
         fetchEvents();
         onRefreshData();
       }
     } catch {
-      showToast('Gagal menghapus acara', 'error');
+      showToast('Gagal menghapus agenda', 'error');
     }
   };
 
   const handleSaveFinance = async (e: React.FormEvent) => {
     e.preventDefault();
+    const payload = {
+      type: newFinance.type,
+      category: newFinance.category,
+      amount: parseFloat(newFinance.amount),
+      description: newFinance.description,
+      date: newFinance.date,
+    };
+
     try {
-      const isEditing = editingFinanceId !== null;
-      const url = isEditing ? `/api/finances/${editingFinanceId}` : '/api/finances';
-      const method = isEditing ? 'PUT' : 'POST';
+      const url = editingFinanceId !== null ? `/api/finances/${editingFinanceId}` : '/api/finances';
+      const method = editingFinanceId !== null ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newFinance),
+        body: JSON.stringify(payload),
       });
       const json = await res.json();
       if (json.success) {
-        showToast(isEditing ? 'Transaksi berhasil diperbarui!' : 'Transaksi berhasil dicatat!');
+        showToast(editingFinanceId !== null ? 'Catatan kas berhasil diubah!' : 'Transaksi kas baru berhasil dicatat!');
         setEditingFinanceId(null);
         setNewFinance({
           type: 'income',
@@ -334,17 +354,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           {/* TAB 1: SETTINGS */}
           {activeTab === 'settings' && (
             <form onSubmit={handleSaveSettings} className="admin-card">
-              {/* CUSTOM DATE & TIME SIMULATION */}
-              <div className="card-section-title" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <Clock size={20} />
-                <span>Simulasi Waktu & Tanggal Custom (Testing Mode)</span>
-              </div>
-              <p className="card-section-hint">
-                Aktifkan switch ini untuk mensimulasikan tanggal/jam tertentu (misal: Hari Jumat jam 11:58 WITA).
-              </p>
-              <div className="grid-3col" style={{ background: 'rgba(255,255,255,0.03)', padding: 20, borderRadius: 16, border: '1px solid rgba(255,255,255,0.08)', marginBottom: 32 }}>
+              {/* CUSTOM TIME & DATE SIMULATOR */}
+              <div className="card-section-title">Simulator Pengujian Waktu Custom (Pengujian Layar Adzan/Iqomah/Jumat)</div>
+              <p className="card-section-hint">Gunakan fitur ini untuk mengetes simulasi waktu tanpa mengubah jam sistem komputer masjid.</p>
+              
+              <div className="grid-3col" style={{ marginBottom: 24, background: 'rgba(255,255,255,0.03)', padding: 20, borderRadius: 16, border: '1px solid rgba(255,255,255,0.08)' }}>
                 <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label>Mode Simulasi Waktu</label>
+                  <label>Status Custom Simulator</label>
                   <button
                     type="button"
                     onClick={() => setSettingsForm({ ...settingsForm, use_custom_datetime: settingsForm.use_custom_datetime === 1 ? 0 : 1 })}
@@ -386,7 +402,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 </div>
               </div>
 
-              {/* PROFIL & KOKERDINAT LOKASI */}
+              {/* PROFIL & KOORDINAT LOKASI */}
               <div className="card-section-title">Profil & Koordinat Lokasi</div>
               <div className="grid-2col">
                 <div className="form-group">

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Settings, Calendar, DollarSign, Monitor } from 'lucide-react';
 import { AdhanIqomahOverlay } from './components/AdhanIqomahOverlay';
 import { PrayerBar } from './components/PrayerBar';
 import { EventCarousel } from './components/EventCarousel';
@@ -14,6 +15,8 @@ export function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(
     typeof window !== 'undefined' && window.location.pathname === '/admin'
   );
+  const [adminTab, setAdminTab] = useState<'settings' | 'events' | 'finances'>('settings');
+  const [isHoverSidebarOpen, setIsHoverSidebarOpen] = useState(false);
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [dataFetchLocalTime, setDataFetchLocalTime] = useState<number>(Date.now());
@@ -60,6 +63,7 @@ export function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // Keyboard Shortcuts: Press "p" or "P" to toggle Fullscreen Mode
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const targetTag = (e.target as HTMLElement)?.tagName?.toUpperCase();
@@ -67,8 +71,8 @@ export function App() {
         return;
       }
 
-      // Shortcut 1: Shift + 1 -> Toggle Fullscreen Mode
-      if (e.shiftKey && (e.key === '1' || e.key === '!' || e.code === 'Digit1')) {
+      // Key "p" or "P" -> Toggle Fullscreen Mode
+      if (e.key === 'p' || e.key === 'P') {
         e.preventDefault();
         if (!document.fullscreenElement) {
           document.documentElement.requestFullscreen().catch((err) => {
@@ -80,20 +84,37 @@ export function App() {
           }
         }
       }
-
-      // Shortcut 2: Shift + 2 -> Toggle Admin Panel
-      if (e.shiftKey && (e.key === '2' || e.key === '@' || e.code === 'Digit2')) {
-        e.preventDefault();
-        setIsAdminOpen((prev) => !prev);
-      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Global Mouse Cursor Detection for Left-Edge Slide-Out Sidebar Drawer
+  useEffect(() => {
+    if (isAdminOpen) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (e.clientX <= 20) {
+        setIsHoverSidebarOpen(true);
+      } else if (e.clientX > 330) {
+        setIsHoverSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [isAdminOpen]);
+
+  const handleOpenAdminTab = (tab: 'settings' | 'events' | 'finances') => {
+    setAdminTab(tab);
+    setIsAdminOpen(true);
+    setIsHoverSidebarOpen(false);
+  };
+
   const handleCloseAdmin = () => {
     setIsAdminOpen(false);
+    setIsHoverSidebarOpen(false);
     if (window.location.pathname === '/admin') {
       window.history.pushState({}, '', '/');
     }
@@ -159,6 +180,82 @@ export function App() {
         initialTimeRemainingSec={data.prayerData.timeRemainingSec}
       />
 
+      {/* Left Edge Mouse Trigger Sensor (Active on Signage View) */}
+      {!isAdminOpen && (
+        <div
+          onMouseEnter={() => setIsHoverSidebarOpen(true)}
+          style={{
+            position: 'fixed',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 20,
+            zIndex: 999990,
+            cursor: 'pointer',
+          }}
+        />
+      )}
+
+      {/* Slide-Out Hover Admin Sidebar Drawer (Same structure as Admin Panel Sidebar) */}
+      {!isAdminOpen && (
+        <aside
+          className="admin-sidebar"
+          onMouseEnter={() => setIsHoverSidebarOpen(true)}
+          onMouseLeave={() => setIsHoverSidebarOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            zIndex: 999999,
+            transform: isHoverSidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+            transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+            boxShadow: isHoverSidebarOpen ? '10px 0 40px rgba(0,0,0,0.8)' : 'none',
+          }}
+        >
+          <div className="sidebar-brand">
+            <h2 className="sidebar-title">Management System</h2>
+            <p className="sidebar-subtitle">{data.settings.mosque_name || 'Masjid Al Hikmah'}</p>
+          </div>
+
+          <nav className="sidebar-nav">
+            <button
+              className="sidebar-nav-item"
+              onClick={() => handleOpenAdminTab('settings')}
+            >
+              <Settings size={20} />
+              <span>Pengaturan Shalat & Lokasi</span>
+            </button>
+
+            <button
+              className="sidebar-nav-item"
+              onClick={() => handleOpenAdminTab('events')}
+            >
+              <Calendar size={20} />
+              <span>Agenda & Acara</span>
+            </button>
+
+            <button
+              className="sidebar-nav-item"
+              onClick={() => handleOpenAdminTab('finances')}
+            >
+              <DollarSign size={20} />
+              <span>Laporan Keuangan Kas</span>
+            </button>
+          </nav>
+
+          <div className="sidebar-footer">
+            <button className="sidebar-btn-exit" onClick={() => setIsHoverSidebarOpen(false)}>
+              <Monitor size={18} />
+              <span>Ke Tampilan Signage TV</span>
+            </button>
+            <div style={{ marginTop: 14, textAlign: 'center', fontSize: '0.72rem', color: '#71717a', fontWeight: 600, lineHeight: 1.4 }}>
+              © 2026 Al Hikmah Digital Signage<br />Powered by Decablue Society │ Developed by Rakhan Ataya Prayetno
+            </div>
+          </div>
+        </aside>
+      )}
+
       {/* Main Fullscreen Layout */}
       <div className="tv-main-content">
         <div className="hero-top-row">
@@ -196,9 +293,10 @@ export function App() {
         finances={data.finances}
       />
 
-      {/* Admin Panel Drawer */}
+      {/* Fullscreen Admin Panel Workspace */}
       <AdminPanel
         isOpen={isAdminOpen}
+        initialTab={adminTab}
         onClose={handleCloseAdmin}
         onRefreshData={fetchData}
       />
