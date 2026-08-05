@@ -167,12 +167,25 @@ export function App() {
           </div>
 
           <div className="clock-sidebar-section">
-            {/* Braun Analog Glass Clock with Logo embedded inside dial */}
+            {/* Braun Analog Glass Clock */}
             <div className="analog-clock-wrapper">
               <GlassClock targetDate={activeClockTime} />
             </div>
 
             <div className="clock-info-box">
+              {/* Prominent Mosque Logo Above Title */}
+              <img
+                src="/assets/alhikmah.png"
+                alt="Logo Masjid Al Hikmah"
+                style={{
+                  width: 56,
+                  height: 56,
+                  objectFit: 'contain',
+                  marginBottom: 6,
+                  filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.6))',
+                }}
+              />
+
               <h1 className="clock-brand-title">
                 {data.settings.mosque_name || 'Masjid Al Hikmah'}
               </h1>
@@ -182,6 +195,47 @@ export function App() {
               <div className="cardless-digital-clock">
                 <span className="clock-num-digits">{hh}:{mm}</span>
                 <span className="clock-num-sec">:{ss}</span>
+              </div>
+            </div>
+
+            {/* Option 1: QRIS Donation Glass Card */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.04)',
+              backdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: 16,
+              padding: '10px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 14,
+              width: '100%',
+              marginTop: 4,
+              boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+            }}>
+              <div style={{
+                background: '#ffffff',
+                padding: 4,
+                borderRadius: 8,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <img
+                  src="/assets/qris-dummy.svg"
+                  alt="QRIS Donasi"
+                  style={{ width: 48, height: 48, objectFit: 'contain' }}
+                />
+              </div>
+              <div style={{ textAlign: 'left', flex: 1 }}>
+                <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.5px' }}>
+                  INFAQ & DONASI QRIS
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#a1a1aa', fontWeight: 600, marginTop: 2 }}>
+                  Scan via Bank & E-Wallet
+                </div>
+                <div style={{ fontSize: '0.62rem', color: '#71717a', marginTop: 2, fontWeight: 500 }}>
+                  BCA • Mandiri • GoPay • OVO • Dana
+                </div>
               </div>
             </div>
           </div>
