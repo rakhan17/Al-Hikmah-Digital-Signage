@@ -20,35 +20,35 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
   const imageMapRef = useRef<Record<string | number, string>>({});
   const touchStartX = useRef<number | null>(null);
 
-  // 1. Mandatory Opening Welcome Banner at Start (7s duration, uses /assets/opening.jpeg)
+  // 1. Mandatory Opening Welcome Banner at Start (5s duration, uses /assets/opening.jpeg)
   const welcomeSlide: SlideItem = {
     id: -100,
     title: 'Selamat Datang di Masjid Al Hikmah',
-    speaker: 'Himbauan Jamaah',
+    speaker: 'Dewan Kemakmuran Masjid',
     event_date: 'Setiap Hari',
     event_time: '24 Jam',
     description: 'Jagalah ketertiban, kebersihan, dan kekhusyukan selama berada di lingkungan masjid.',
     is_active: 1,
     isWelcome: true,
-    durationSec: 7,
+    durationSec: 5,
   };
 
-  // 2. Mandatory Donation Poster Banner at End (5s duration, uses /assets/qris.jpeg)
+  // 2. Mandatory Donation Poster Banner at End (7s duration [+2s extra], uses /assets/qris.jpeg)
   const donationSlide: SlideItem = {
     id: -200,
     title: 'Infaq & Donasi Digital Masjid Al Hikmah',
     speaker: 'QRIS & Transfer Bank',
     event_date: 'Setiap Saat',
     event_time: 'Online 24 Jam',
-    description: 'BSI: 7123-4567-89  │  Mandiri: 149-00-1234567-8 (a.n. Masjid Al Hikmah)',
+    description: 'BSI: 9118117112 (a.n. Masjid Al-Hikmah)',
     is_active: 1,
     isDonation: true,
-    durationSec: 5,
+    durationSec: 7,
   };
 
   // Combine slides: [Welcome] -> [Middle Event Slides (if any)] -> [Donation Poster]
   const middleEvents: SlideItem[] = events && events.length > 0
-    ? events.map((e) => ({ ...e, durationSec: 7 }))
+    ? events.map((e) => ({ ...e, durationSec: 5 }))
     : [];
 
   const activeSlides: SlideItem[] = [welcomeSlide, ...middleEvents, donationSlide];
