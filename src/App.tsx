@@ -173,9 +173,23 @@ export function App() {
             </div>
 
             <div className="clock-info-box">
-              <h1 className="clock-brand-title">
-                {data.settings.mosque_name || 'Masjid Al Hikmah'}
-              </h1>
+              {/* Mosque Official Emblem Logo */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 6 }}>
+                <img
+                  src="/assets/alhikmah.png"
+                  alt="Logo Masjid Al Hikmah"
+                  style={{
+                    width: 42,
+                    height: 42,
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.5))',
+                  }}
+                />
+                <h1 className="clock-brand-title" style={{ margin: 0 }}>
+                  {data.settings.mosque_name || 'Masjid Al Hikmah'}
+                </h1>
+              </div>
+
               <div className="clock-date-gregorian">{data.prayerData.gregorianDate}</div>
               <div className="clock-date-hijri">{data.prayerData.hijriDate}</div>
 

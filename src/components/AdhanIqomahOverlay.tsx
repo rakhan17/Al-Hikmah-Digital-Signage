@@ -34,11 +34,24 @@ export const AdhanIqomahOverlay: React.FC<AdhanIqomahOverlayProps> = ({
   const ss = String(secondsLeft % 60).padStart(2, '0');
 
   const pName = prayerContext.name.toUpperCase();
-  const copyrightText = "© 2026 Al Hikmah Digital Signage │ Powered by Decablue Society │ Developed by Rakhan Ataya Prayetno. All Rights Reserved.";
 
   return (
     <div className="overlay-backdrop">
       <div className="overlay-cinematic-container">
+        {/* Mosque Official Emblem Logo Header */}
+        <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'center' }}>
+          <img
+            src="/assets/alhikmah.png"
+            alt="Logo Masjid Al Hikmah"
+            style={{
+              width: 72,
+              height: 72,
+              objectFit: 'contain',
+              filter: 'drop-shadow(0 6px 16px rgba(0,0,0,0.6))',
+            }}
+          />
+        </div>
+
         {/* PHASE 1: REGULAR & FRIDAY ADHAN COUNTDOWN (WITH TIMER) */}
         {phase === 'ADHAN_COUNTDOWN' && (
           <>
@@ -189,7 +202,7 @@ export const AdhanIqomahOverlay: React.FC<AdhanIqomahOverlayProps> = ({
         )}
       </div>
 
-      {/* COPYRIGHT SUBBAR AT THE BOTTOM OF ALL OVERLAY SCREENS */}
+      {/* COPYRIGHT SUBBAR AT THE BOTTOM OF ALL OVERLAY SCREENS WITH DECABLUE LOGO */}
       <div style={{
         position: 'absolute',
         bottom: 0,
@@ -201,6 +214,7 @@ export const AdhanIqomahOverlay: React.FC<AdhanIqomahOverlayProps> = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        gap: 8,
         fontSize: '0.65rem',
         fontWeight: 600,
         color: '#52525b',
@@ -208,7 +222,13 @@ export const AdhanIqomahOverlay: React.FC<AdhanIqomahOverlayProps> = ({
         textTransform: 'uppercase',
         zIndex: 10,
       }}>
-        {copyrightText}
+        <span>© 2026 Al Hikmah Digital Signage │ Powered by</span>
+        <img
+          src="/assets/decablue.png"
+          alt="Decablue Society Logo"
+          style={{ width: 14, height: 14, objectFit: 'contain' }}
+        />
+        <span>Decablue Society │ Developed by Rakhan Ataya Prayetno. All Rights Reserved.</span>
       </div>
     </div>
   );

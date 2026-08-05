@@ -12,8 +12,6 @@ export const RunningTextFooter: React.FC<RunningTextFooterProps> = ({
 }) => {
   const fin = finances || financeSummary;
 
-  const copyrightText = "© 2026 Al Hikmah Digital Signage │ Powered by Decablue Society │ Developed by Rakhan Ataya Prayetno. All Rights Reserved.";
-
   return (
     <footer className="tv-footer-wrapper">
       {/* 100% Dedicated Finance & Kas Masjid Marquee Ticker */}
@@ -75,9 +73,15 @@ export const RunningTextFooter: React.FC<RunningTextFooterProps> = ({
         </div>
       </div>
 
-      {/* Elegant Small Copyright Sub-bar Below Running Text */}
-      <div className="tv-footer-copyright-subbar">
-        {copyrightText}
+      {/* Elegant Small Copyright Sub-bar Below Running Text with Decablue Logo */}
+      <div className="tv-footer-copyright-subbar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+        <span>© 2026 Al Hikmah Digital Signage │ Powered by</span>
+        <img
+          src="/assets/decablue.png"
+          alt="Decablue Society Logo"
+          style={{ width: 14, height: 14, objectFit: 'contain' }}
+        />
+        <span>Decablue Society │ Developed by Rakhan Ataya Prayetno. All Rights Reserved.</span>
       </div>
     </footer>
   );
