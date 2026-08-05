@@ -247,11 +247,11 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
               backgroundPosition: 'center',
             }}
           >
-            {/* 1. CUSTOM OPENING WELCOME BANNER (uses opening.jpeg, glass tag badge, grand title, arabic calligraphy, no rigid event metadata) */}
+            {/* 1. ELEGANT CLEAN OPENING WELCOME BANNER (No Pill Card Badges, Gold Arabic Calligraphy Top, Clean Grand Title & Description) */}
             {slideItem.isWelcome ? (
               <div className="carousel-slide-overlay" style={{
-                background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.88) 85%)',
-                padding: '44px 52px',
+                background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.85) 90%)',
+                padding: '48px 60px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'flex-end',
@@ -259,50 +259,35 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
                 textAlign: 'left',
               }}>
                 <div style={{
-                  background: 'rgba(255, 255, 255, 0.12)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  padding: '6px 16px',
-                  borderRadius: 20,
-                  fontSize: '0.85rem',
-                  fontWeight: 800,
-                  color: '#ffffff',
-                  letterSpacing: '1.5px',
-                  marginBottom: 12,
-                  textTransform: 'uppercase',
-                }}>
-                  UCAPAN SELAMAT DATANG & HIMBAUAN
-                </div>
-
-                <h2 style={{
-                  fontSize: '3.2rem',
-                  fontWeight: 900,
-                  color: '#ffffff',
-                  lineHeight: 1.15,
-                  marginBottom: 8,
-                  textShadow: '0 4px 20px rgba(0,0,0,0.9)',
-                  letterSpacing: '-0.5px',
-                }}>
-                  {slideItem.title}
-                </h2>
-
-                <div style={{
                   fontFamily: "'Amiri', serif",
-                  fontSize: '1.8rem',
+                  fontSize: '2.2rem',
                   fontWeight: 700,
-                  color: '#e4e4e7',
-                  marginBottom: 12,
-                  textShadow: '0 2px 10px rgba(0,0,0,0.8)',
+                  color: '#fef08a',
+                  marginBottom: 6,
+                  textShadow: '0 2px 12px rgba(0,0,0,0.9)',
+                  letterSpacing: '1px',
                 }}>
                   أَهْلًا وَسَهْلًا وَمَرْحَبًا بِكُمْ
                 </div>
 
+                <h2 style={{
+                  fontSize: '3.4rem',
+                  fontWeight: 800,
+                  color: '#ffffff',
+                  lineHeight: 1.15,
+                  marginBottom: 14,
+                  letterSpacing: '-0.8px',
+                  textShadow: '0 4px 24px rgba(0,0,0,0.95)',
+                }}>
+                  {slideItem.title}
+                </h2>
+
                 <p style={{
                   fontSize: '1.25rem',
                   fontWeight: 500,
-                  color: '#d4d4d8',
+                  color: '#e4e4e7',
                   lineHeight: 1.5,
-                  maxWidth: '850px',
+                  maxWidth: '820px',
                   textShadow: '0 2px 10px rgba(0,0,0,0.9)',
                 }}>
                   {slideItem.description}
