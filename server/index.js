@@ -473,9 +473,9 @@ app.delete('/api/finances/:id', (req, res) => {
   }
 });
 
-// Fallback for SPA routing in production dist mode
+// Fallback for SPA routing in production dist mode (Express 5 compatible syntax)
 if (fs.existsSync(distDir)) {
-  app.get('*', (req, res, next) => {
+  app.get('(.*)', (req, res, next) => {
     if (req.path.startsWith('/api')) return next();
     res.sendFile(path.join(distDir, 'index.html'));
   });
