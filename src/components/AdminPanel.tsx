@@ -501,20 +501,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: 10,
-                      background: 'rgba(239, 68, 68, 0.12)',
-                      border: '1px solid rgba(239, 68, 68, 0.35)',
-                      color: '#f87171',
+                      background: '#dc2626',
+                      border: 'none',
+                      color: '#ffffff',
                       cursor: 'pointer',
+                      boxShadow: '0 4px 14px rgba(220, 38, 38, 0.4)',
                       transition: 'all 0.2s ease',
                     }}
                   >
-                    <ShieldAlert size={20} />
+                    <ShieldAlert size={20} color="#ffffff" />
                     <span>Developer Testing & Technical Zone (Pengaturan Lanjutan Khusus Teknisi)</span>
                   </button>
                 ) : (
                   <div style={{
-                    background: 'rgba(239, 68, 68, 0.06)',
-                    border: '1px solid rgba(239, 68, 68, 0.25)',
+                    background: 'rgba(239, 68, 68, 0.08)',
+                    border: '1px solid rgba(239, 68, 68, 0.35)',
                     borderRadius: 20,
                     padding: 28,
                   }}>
