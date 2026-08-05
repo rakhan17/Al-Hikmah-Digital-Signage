@@ -167,7 +167,7 @@ export function App() {
           </div>
 
           <div className="clock-sidebar-section">
-            {/* Top-Aligned Braun Analog Glass Clock */}
+            {/* Braun Analog Glass Clock */}
             <div className="analog-clock-wrapper">
               <GlassClock targetDate={activeClockTime} />
             </div>
@@ -182,61 +182,6 @@ export function App() {
               <div className="cardless-digital-clock">
                 <span className="clock-num-digits">{hh}:{mm}</span>
                 <span className="clock-num-sec">:{ss}</span>
-              </div>
-            </div>
-
-            {/* Direct Prominent Large QRIS & Donation Section (NO CARD BORDER, VERY LARGE QRIS BARCODE) */}
-            <div style={{
-              marginTop: 'auto',
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-            }}>
-              {/* LARGE HIGH-CONTRAST QRIS BARCODE */}
-              <div style={{
-                background: '#ffffff',
-                padding: 10,
-                borderRadius: 18,
-                boxShadow: '0 14px 35px rgba(0,0,0,0.85)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                <img
-                  src="/assets/qris-dummy.svg"
-                  alt="QRIS Donasi Masjid"
-                  style={{ width: 135, height: 135, objectFit: 'contain' }}
-                />
-              </div>
-
-              {/* CLEAN BOLD DONATION LABELS */}
-              <div style={{ textAlign: 'center', marginTop: 2 }}>
-                <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.5px' }}>
-                  INFAQ & DONASI QRIS
-                </div>
-                <div style={{ fontSize: '0.72rem', color: '#a1a1aa', fontWeight: 600, marginTop: 1 }}>
-                  BCA • Mandiri • GoPay • OVO • Dana
-                </div>
-              </div>
-
-              {/* DIRECT BANK ACCOUNT DETAILS */}
-              <div style={{
-                display: 'flex',
-                gap: 14,
-                fontSize: '0.78rem',
-                color: '#f4f4f5',
-                fontWeight: 700,
-                marginTop: 2,
-              }}>
-                <div>
-                  <span style={{ color: '#a1a1aa' }}>BSI:</span> 7123-4567-89
-                </div>
-                <div>
-                  <span style={{ color: '#a1a1aa' }}>Mandiri:</span> 149-00-1234567-8
-                </div>
               </div>
             </div>
           </div>
