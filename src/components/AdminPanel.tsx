@@ -83,8 +83,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     try {
       const res = await fetch('/api/settings');
       const json = await res.json();
-      if (json.success && json.settings) {
-        setSettingsForm(json.settings);
+      if (json.success) {
+        setSettingsForm(json.data || json.settings || {});
       }
     } catch {
       showToast('Gagal memuat pengaturan database', 'error');
@@ -95,8 +95,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     try {
       const res = await fetch('/api/events');
       const json = await res.json();
-      if (json.success && Array.isArray(json.events)) {
-        setEventsList(json.events);
+      if (json.success) {
+        const list = json.data || json.events || [];
+        setEventsList(Array.isArray(list) ? list : []);
       }
     } catch {
       showToast('Gagal memuat daftar agenda', 'error');
@@ -108,8 +109,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       const res = await fetch('/api/finances');
       const json = await res.json();
       if (json.success) {
-        setFinanceRecords(Array.isArray(json.finances) ? json.finances : []);
-        setFinanceSummary(json.summary || { totalIncome: 0, totalExpense: 0, balance: 0 });
+        const list = json.data?.records || json.records || json.finances || [];
+        const sum = json.data?.summary || json.summary || { totalIncome: 0, totalExpense: 0, balance: 0 };
+        setFinanceRecords(Array.isArray(list) ? list : []);
+        setFinanceSummary(sum);
       }
     } catch {
       showToast('Gagal memuat laporan keuangan', 'error');
@@ -485,156 +488,156 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 ))}
               </div>
 
-              {/* DANGER / DEVELOPER ZONE TOGGLE FOR SENSITIVE OPTIONS */}
-              <div style={{ marginTop: 40, paddingTop: 28, borderTop: '1px dashed rgba(255,255,255,0.12)' }}>
-                {!showAdvancedDevMode ? (
-                  <button
-                    type="button"
-                    onClick={() => setShowAdvancedDevMode(true)}
-                    style={{
-                      width: '100%',
-                      padding: '14px 20px',
-                      borderRadius: 14,
-                      fontSize: '0.95rem',
-                      fontWeight: 800,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 10,
-                      background: '#dc2626',
-                      border: 'none',
-                      color: '#ffffff',
-                      cursor: 'pointer',
-                      boxShadow: '0 4px 14px rgba(220, 38, 38, 0.4)',
-                      transition: 'all 0.2s ease',
-                    }}
-                  >
-                    <ShieldAlert size={20} color="#ffffff" />
-                    <span>Developer Testing & Technical Zone (Pengaturan Lanjutan Khusus Teknisi)</span>
-                  </button>
-                ) : (
-                  <div style={{
-                    background: 'rgba(239, 68, 68, 0.08)',
-                    border: '1px solid rgba(239, 68, 68, 0.35)',
-                    borderRadius: 20,
-                    padding: 28,
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#f87171', fontWeight: 800, fontSize: '1.05rem' }}>
-                        <AlertTriangle size={20} />
-                        <span>AREA LANJUTAN & SIMULATOR TEKNIS</span>
-                      </div>
+              {/* REVEALED DEVELOPER / TECHNICAL ZONE PANEL */}
+              {showAdvancedDevMode && (
+                <div style={{
+                  background: 'rgba(239, 68, 68, 0.08)',
+                  border: '1px solid rgba(239, 68, 68, 0.35)',
+                  borderRadius: 20,
+                  padding: 28,
+                  marginTop: 32,
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#f87171', fontWeight: 800, fontSize: '1.05rem' }}>
+                      <AlertTriangle size={20} />
+                      <span>AREA LANJUTAN & SIMULATOR TEKNIS</span>
+                    </div>
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      onClick={() => setShowAdvancedDevMode(false)}
+                      style={{ padding: '6px 14px', fontSize: '0.82rem' }}
+                    >
+                      Sembunyikan / Kunci Mode Lanjutan
+                    </button>
+                  </div>
+
+                  {/* CUSTOM TIME & DATE SIMULATOR */}
+                  <div className="card-section-title" style={{ fontSize: '1.05rem', color: '#fca5a5' }}>
+                    Simulator Pengujian Waktu Custom (Pengujian Layar Adzan/Iqomah/Jumat)
+                  </div>
+                  <p className="card-section-hint" style={{ color: '#f87171' }}>
+                    Perhatian: Gunakan fitur ini HANYA untuk menguji simulasi waktu tanpa mengubah jam sistem komputer masjid.
+                  </p>
+                  
+                  <div className="grid-3col" style={{ marginBottom: 28, background: 'rgba(0,0,0,0.4)', padding: 18, borderRadius: 16, border: '1px solid rgba(239,68,68,0.2)' }}>
+                    <div className="form-group" style={{ marginBottom: 0 }}>
+                      <label>Status Custom Simulator</label>
                       <button
                         type="button"
-                        className="btn-secondary"
-                        onClick={() => setShowAdvancedDevMode(false)}
-                        style={{ padding: '6px 14px', fontSize: '0.82rem' }}
+                        onClick={() => setSettingsForm({ ...settingsForm, use_custom_datetime: settingsForm.use_custom_datetime === 1 ? 0 : 1 })}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 8,
+                          padding: '10px 16px',
+                          background: settingsForm.use_custom_datetime === 1 ? '#ffffff' : '#18181b',
+                          color: settingsForm.use_custom_datetime === 1 ? '#000000' : '#ffffff',
+                          border: '1px solid rgba(255,255,255,0.2)',
+                          borderRadius: 12,
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          width: '100%',
+                        }}
                       >
-                        Sembunyikan / Kunci Mode Lanjutan
+                        {settingsForm.use_custom_datetime === 1 ? <ToggleRight size={22} /> : <ToggleLeft size={22} />}
+                        <span>{settingsForm.use_custom_datetime === 1 ? 'Aktif (Custom Mode)' : 'Nonaktif (Waktu Real)'}</span>
                       </button>
                     </div>
-
-                    {/* CUSTOM TIME & DATE SIMULATOR */}
-                    <div className="card-section-title" style={{ fontSize: '1.05rem', color: '#fca5a5' }}>
-                      Simulator Pengujian Waktu Custom (Pengujian Layar Adzan/Iqomah/Jumat)
+                    <div className="form-group" style={{ marginBottom: 0 }}>
+                      <label>Tanggal Custom</label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        value={settingsForm.custom_date ?? ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, custom_date: e.target.value })}
+                      />
                     </div>
-                    <p className="card-section-hint" style={{ color: '#f87171' }}>
-                      Perhatian: Gunakan fitur ini HANYA untuk menguji simulasi waktu tanpa mengubah jam sistem komputer masjid.
-                    </p>
-                    
-                    <div className="grid-3col" style={{ marginBottom: 28, background: 'rgba(0,0,0,0.4)', padding: 18, borderRadius: 16, border: '1px solid rgba(239,68,68,0.2)' }}>
-                      <div className="form-group" style={{ marginBottom: 0 }}>
-                        <label>Status Custom Simulator</label>
-                        <button
-                          type="button"
-                          onClick={() => setSettingsForm({ ...settingsForm, use_custom_datetime: settingsForm.use_custom_datetime === 1 ? 0 : 1 })}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 8,
-                            padding: '10px 16px',
-                            background: settingsForm.use_custom_datetime === 1 ? '#ffffff' : '#18181b',
-                            color: settingsForm.use_custom_datetime === 1 ? '#000000' : '#ffffff',
-                            border: '1px solid rgba(255,255,255,0.2)',
-                            borderRadius: 12,
-                            fontWeight: 700,
-                            cursor: 'pointer',
-                            width: '100%',
-                          }}
-                        >
-                          {settingsForm.use_custom_datetime === 1 ? <ToggleRight size={22} /> : <ToggleLeft size={22} />}
-                          <span>{settingsForm.use_custom_datetime === 1 ? 'Aktif (Custom Mode)' : 'Nonaktif (Waktu Real)'}</span>
-                        </button>
-                      </div>
-                      <div className="form-group" style={{ marginBottom: 0 }}>
-                        <label>Tanggal Custom</label>
-                        <input
-                          type="date"
-                          className="form-control"
-                          value={settingsForm.custom_date ?? ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, custom_date: e.target.value })}
-                        />
-                      </div>
-                      <div className="form-group" style={{ marginBottom: 0 }}>
-                        <label>Jam Custom (HH:mm)</label>
-                        <input
-                          type="time"
-                          className="form-control"
-                          value={settingsForm.custom_time ?? ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, custom_time: e.target.value })}
-                        />
-                      </div>
-                    </div>
-
-                    {/* PROFIL & KOORDINAT LOKASI */}
-                    <div className="card-section-title" style={{ fontSize: '1.05rem', color: '#fca5a5' }}>
-                      Profil & Koordinat Lokasi GPS Masjid
-                    </div>
-                    <div className="grid-2col">
-                      <div className="form-group">
-                        <label>Nama Masjid</label>
-                        <input
-                          className="form-control"
-                          value={settingsForm.mosque_name ?? ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, mosque_name: e.target.value })}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Alamat Singkat</label>
-                        <input
-                          className="form-control"
-                          value={settingsForm.address ?? ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, address: e.target.value })}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Latitude (Garis Lintang)</label>
-                        <input
-                          type="number"
-                          step="any"
-                          className="form-control"
-                          value={settingsForm.latitude ?? ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, latitude: e.target.value === '' ? '' : parseFloat(e.target.value) })}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Longitude (Garis Bujur)</label>
-                        <input
-                          type="number"
-                          step="any"
-                          className="form-control"
-                          value={settingsForm.longitude ?? ''}
-                          onChange={(e) => setSettingsForm({ ...settingsForm, longitude: e.target.value === '' ? '' : parseFloat(e.target.value) })}
-                        />
-                      </div>
+                    <div className="form-group" style={{ marginBottom: 0 }}>
+                      <label>Jam Custom (HH:mm)</label>
+                      <input
+                        type="time"
+                        className="form-control"
+                        value={settingsForm.custom_time ?? ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, custom_time: e.target.value })}
+                      />
                     </div>
                   </div>
-                )}
-              </div>
 
-              <div style={{ marginTop: 28 }}>
-                <button type="submit" className="btn-primary" disabled={savingSettings}>
+                  {/* PROFIL & KOORDINAT LOKASI */}
+                  <div className="card-section-title" style={{ fontSize: '1.05rem', color: '#fca5a5' }}>
+                    Profil & Koordinat Lokasi GPS Masjid
+                  </div>
+                  <div className="grid-2col">
+                    <div className="form-group">
+                      <label>Nama Masjid</label>
+                      <input
+                        className="form-control"
+                        value={settingsForm.mosque_name ?? ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, mosque_name: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Alamat Singkat</label>
+                      <input
+                        className="form-control"
+                        value={settingsForm.address ?? ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, address: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Latitude (Garis Lintang)</label>
+                      <input
+                        type="number"
+                        step="any"
+                        className="form-control"
+                        value={settingsForm.latitude ?? ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, latitude: e.target.value === '' ? '' : parseFloat(e.target.value) })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Longitude (Garis Bujur)</label>
+                      <input
+                        type="number"
+                        step="any"
+                        className="form-control"
+                        value={settingsForm.longitude ?? ''}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, longitude: e.target.value === '' ? '' : parseFloat(e.target.value) })}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 50/50 FLEX BUTTON LAYOUT AT BOTTOM */}
+              <div style={{ marginTop: 32, display: 'flex', gap: 16 }}>
+                <button type="submit" className="btn-primary" disabled={savingSettings} style={{ flex: 1 }}>
                   {savingSettings ? <RefreshCw className="animate-spin" size={18} /> : <Save size={18} />} Simpan Seluruh Pengaturan
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowAdvancedDevMode((prev) => !prev)}
+                  style={{
+                    flex: 1,
+                    padding: '12px 20px',
+                    borderRadius: 12,
+                    fontSize: '0.95rem',
+                    fontWeight: 800,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 10,
+                    background: '#dc2626',
+                    border: 'none',
+                    color: '#ffffff',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 14px rgba(220, 38, 38, 0.4)',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  <ShieldAlert size={20} color="#ffffff" />
+                  <span>{showAdvancedDevMode ? 'Tutup Technical Zone' : 'Developer Technical Zone'}</span>
                 </button>
               </div>
             </form>
