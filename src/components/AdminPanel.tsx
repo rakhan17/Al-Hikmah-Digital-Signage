@@ -12,8 +12,6 @@ import {
   CheckCircle,
   AlertCircle,
   XCircle,
-  ToggleLeft,
-  ToggleRight,
   ShieldAlert,
   AlertTriangle,
 } from 'lucide-react';
@@ -156,7 +154,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       if (pass === '17oktober2009') {
         setShowAdvancedDevMode(true);
         setSettingsForm((prev) => ({ ...prev, use_custom_datetime: 1 }));
-        showToast('Akses Teknisi Diberikan! Mode Lanjutan & Simulator Aktif.');
+        showToast('Akses Teknisi Diberikan! Mode Manual & Simulator Aktif.');
       } else if (pass !== null) {
         showToast('Kode verifikasi salah! Akses ditolak.', 'error');
       }
@@ -514,53 +512,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   padding: 28,
                   marginTop: 32,
                 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#f87171', fontWeight: 800, fontSize: '1.05rem' }}>
-                      <AlertTriangle size={20} />
-                      <span>AREA LANJUTAN & SIMULATOR TEKNIS (MANUAL MODE)</span>
-                    </div>
-                    <button
-                      type="button"
-                      className="btn-secondary"
-                      onClick={handleToggleDevModeSwitch}
-                      style={{ padding: '6px 14px', fontSize: '0.82rem' }}
-                    >
-                      Sembunyikan / Kunci Mode Lanjutan
-                    </button>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#f87171', fontWeight: 800, fontSize: '1.05rem', marginBottom: 16 }}>
+                    <AlertTriangle size={20} />
+                    <span>AREA LANJUTAN & SIMULATOR TEKNIS (MANUAL MODE)</span>
                   </div>
 
                   {/* CUSTOM TIME & DATE SIMULATOR */}
                   <div className="card-section-title" style={{ fontSize: '1.05rem', color: '#fca5a5' }}>
                     Simulator Pengujian Waktu Custom (Pengujian Layar Adzan/Iqomah/Jumat)
                   </div>
-                  <p className="card-section-hint" style={{ color: '#f87171' }}>
+                  <p className="card-section-hint" style={{ color: '#f87171', marginBottom: 16 }}>
                     Perhatian: Gunakan fitur ini HANYA untuk menguji simulasi waktu tanpa mengubah jam sistem komputer masjid.
                   </p>
                   
-                  <div className="grid-3col" style={{ marginBottom: 28, background: 'rgba(0,0,0,0.4)', padding: 18, borderRadius: 16, border: '1px solid rgba(239,68,68,0.2)' }}>
-                    <div className="form-group" style={{ marginBottom: 0 }}>
-                      <label>Status Custom Simulator</label>
-                      <button
-                        type="button"
-                        onClick={() => setSettingsForm({ ...settingsForm, use_custom_datetime: settingsForm.use_custom_datetime === 1 ? 0 : 1 })}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 8,
-                          padding: '10px 16px',
-                          background: settingsForm.use_custom_datetime === 1 ? '#ffffff' : '#18181b',
-                          color: settingsForm.use_custom_datetime === 1 ? '#000000' : '#ffffff',
-                          border: '1px solid rgba(255,255,255,0.2)',
-                          borderRadius: 12,
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          width: '100%',
-                        }}
-                      >
-                        {settingsForm.use_custom_datetime === 1 ? <ToggleRight size={22} /> : <ToggleLeft size={22} />}
-                        <span>{settingsForm.use_custom_datetime === 1 ? 'Aktif (Custom Mode)' : 'Nonaktif (Waktu Real)'}</span>
-                      </button>
-                    </div>
+                  <div className="grid-2col" style={{ marginBottom: 28, background: 'rgba(0,0,0,0.4)', padding: 18, borderRadius: 16, border: '1px solid rgba(239,68,68,0.2)' }}>
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label>Tanggal Custom</label>
                       <input
