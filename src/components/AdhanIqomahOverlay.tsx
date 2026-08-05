@@ -202,7 +202,7 @@ export const AdhanIqomahOverlay: React.FC<AdhanIqomahOverlayProps> = ({
         )}
       </div>
 
-      {/* COPYRIGHT SUBBAR AT THE BOTTOM OF ALL OVERLAY SCREENS WITH DECABLUE LOGO */}
+      {/* COPYRIGHT SUBBAR WITH MONOCHROME DECABLUE LOGO */}
       <div style={{
         position: 'absolute',
         bottom: 0,
@@ -226,7 +226,12 @@ export const AdhanIqomahOverlay: React.FC<AdhanIqomahOverlayProps> = ({
         <img
           src="/assets/decablue.png"
           alt="Decablue Society Logo"
-          style={{ width: 14, height: 14, objectFit: 'contain' }}
+          style={{
+            width: 14,
+            height: 14,
+            objectFit: 'contain',
+            filter: 'grayscale(100%) brightness(200%) opacity(0.85)',
+          }}
         />
         <span>Decablue Society │ Developed by Rakhan Ataya Prayetno. All Rights Reserved.</span>
       </div>

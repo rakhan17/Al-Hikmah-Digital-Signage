@@ -73,13 +73,18 @@ export const RunningTextFooter: React.FC<RunningTextFooterProps> = ({
         </div>
       </div>
 
-      {/* Elegant Small Copyright Sub-bar Below Running Text with Decablue Logo */}
+      {/* Elegant Small Copyright Sub-bar with Monochrome Decablue Logo */}
       <div className="tv-footer-copyright-subbar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
         <span>© 2026 Al Hikmah Digital Signage │ Powered by</span>
         <img
           src="/assets/decablue.png"
           alt="Decablue Society Logo"
-          style={{ width: 14, height: 14, objectFit: 'contain' }}
+          style={{
+            width: 14,
+            height: 14,
+            objectFit: 'contain',
+            filter: 'grayscale(100%) brightness(200%) opacity(0.85)',
+          }}
         />
         <span>Decablue Society │ Developed by Rakhan Ataya Prayetno. All Rights Reserved.</span>
       </div>

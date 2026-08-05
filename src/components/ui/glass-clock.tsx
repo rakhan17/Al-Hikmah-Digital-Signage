@@ -178,6 +178,28 @@ export function GlassClock({ targetDate }: GlassClockProps): React.ReactElement 
           <div className="glass-reflection" />
           <div className="glass-reflection-overlay" ref={reflectionOverlayRef} />
 
+          {/* Mosque Official Emblem Logo inside Clock Dial */}
+          <div style={{
+            position: 'absolute',
+            top: '32%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none',
+            opacity: 0.88,
+            zIndex: 1,
+          }}>
+            <img
+              src="/assets/alhikmah.png"
+              alt="Logo Masjid Al Hikmah"
+              style={{
+                width: 50,
+                height: 50,
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.4))',
+              }}
+            />
+          </div>
+
           <div className="clock-hour-marks" ref={hourMarksRef} />
           <div className="hour-hand clock-hand" ref={hourHandRef} />
           <div className="minute-hand clock-hand" ref={minuteHandRef} />
