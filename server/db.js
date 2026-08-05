@@ -118,38 +118,139 @@ export function initDb() {
     checkAndAdd('custom_set_timestamp', 'INTEGER DEFAULT NULL');
   }
 
+  // Populate 13 Realistic Mosque Events if fewer than 10 events exist
   const existingEvents = db.prepare('SELECT COUNT(*) as count FROM events').get();
-  if (existingEvents.count === 0) {
+  if (existingEvents.count < 10) {
+    db.prepare('DELETE FROM events').run();
     const insertEvent = db.prepare(`
       INSERT INTO events (title, speaker, event_date, event_time, description, is_active)
       VALUES (?, ?, ?, ?, ?, 1)
     `);
-    insertEvent.run(
-      'Kajian Subuh: Tafsir Al-Qur\'an Surah Al-Kahfi',
-      'Ust. Dr. H. Ahmad Fathoni, M.A.',
-      'Setiap Hari Ahad',
-      '05:30 WITA',
-      'Pembahasan rutin tafsir dan tadabbur Al-Qur\'an bersama seluruh jamaah.'
-    );
-    insertEvent.run(
-      'Kajian Tabligh Akbar: Kunci Kebahagiaan Keluarga Muslim',
-      'KH. Abdul Shamad, Lc.',
-      'Jumat Malam Sabtu',
-      '19:45 WITA',
-      'Terbuka untuk umum, disiarkan langsung melalui TV Kiosk & Live Streaming.'
-    );
+
+    const dummyEvents = [
+      {
+        title: "Kajian Rutin Subuh: Tafsir Tematik Al-Qur'an Surah Al-Kahfi",
+        speaker: 'Ust. Dr. H. Ahmad Fathoni, M.A.',
+        event_date: 'Setiap Hari Ahad',
+        event_time: '05:30 WITA',
+        description: "Pembahasan makna mendalam dan hikmah kandungan Surah Al-Kahfi bagi kehidupan modern.",
+      },
+      {
+        title: 'Kajian Fiqih Muamalah: Hukum Jual Beli & Transaksi Syariah',
+        speaker: 'Ust. Syihabuddin, Lc., M.H.',
+        event_date: 'Setiap Hari Senin',
+        event_time: '19:45 WITA',
+        description: 'Memahami adab dan kaidah muamalah islami dalam perdagangan dan bisnis sehari-hari.',
+      },
+      {
+        title: 'Majlis Akhlaq & Tazkiyatun Nufs: Menyucikan Jiwa & Adab Jamaah',
+        speaker: 'KH. Muhammad Ridwan, S.Ag.',
+        event_date: 'Setiap Hari Selasa',
+        event_time: '18:30 WITA',
+        description: "Panduan praktis menjaga kebersihan hati, kerendahan hati, dan husnuzhan kepada sesama.",
+      },
+      {
+        title: "Kajian Hadits Arbain An-Nawawiyah: 42 Pilar Utama Agama Islam",
+        speaker: 'Ust. Muhammad Al-Ghazali, M.Pd.',
+        event_date: 'Setiap Hari Rabu',
+        event_time: '19:45 WITA',
+        description: 'Mengkaji hadits-hadits pokok ajaran Islam lengkap dengan riwayat dan faidah hukumnya.',
+      },
+      {
+        title: 'Kajian Sirah Nabawiyah: Meneladani Perjuangan Rasulullah SAW',
+        speaker: 'Ust. H. Nur Kholis, Lc.',
+        event_date: 'Setiap Hari Kamis',
+        event_time: '18:30 WITA',
+        description: 'Menelusuri rekam jejak perjuangan Rasulullah SAW dan para sahabat dalam menegakkan dakwah.',
+      },
+      {
+        title: 'Kajian Khusus Muslimah: Fiqih Wanita & Manajemen Keluarga Sakinah',
+        speaker: 'Ustadzah Hjh. Nurul Hidayah, S.Th.I.',
+        event_date: 'Sabtu Pekan Ke-2',
+        event_time: '09:00 WITA',
+        description: "Kajian khusus akhwat dan ibu-ibu dalam membina generasi qur'ani dan keluarga sakinah.",
+      },
+      {
+        title: 'Kajian Tabligh Akbar: Menjaga Kekhusyukan Shalat Berjamaah',
+        speaker: 'KH. Abdul Samad, Lc.',
+        event_date: 'Jumat Malam Sabtu',
+        event_time: '19:45 WITA',
+        description: 'Terbuka untuk umum, disiarkan langsung melalui TV Signage & Live Streaming Youtube.',
+      },
+      {
+        title: "Kajian Tahsin & Tahfizh Al-Qur'an Jamaah Dewasa",
+        speaker: 'Ust. M. Zulkifli, S.Q.',
+        event_date: 'Setiap Hari Sabtu',
+        event_time: '16:30 WITA',
+        description: "Bimbingan tajwid, makhraj huruf, serta setoran hafalan Juz 30 bagi jamaah masjid.",
+      },
+      {
+        title: 'Program Bekam & Layanan Kesehatan Gratis Jamaah',
+        speaker: 'Tim Medis & Thibbun Nabawi Al-Hikmah',
+        event_date: 'Ahad Pekan Pertama',
+        event_time: '08:00 WITA',
+        description: 'Pemeriksaan kesehatan gratis, cek gula darah, tekanan darah, serta terapi bekam sunnah.',
+      },
+      {
+        title: "Kajian Remaja Masjid (IRMA): Pemuda Qur'ani di Era Digital",
+        speaker: 'Ust. Hanif Al-Banjari, S.Sos.',
+        event_date: 'Sabtu Malam Minggu',
+        event_time: '20:00 WITA',
+        description: 'Diskusi interaktif pemuda muslim seputar tantangan media sosial dan moralitas muda-mudi.',
+      },
+      {
+        title: 'Dauroh Jenazah: Pelatihan Tata Cara Mengurus Jenazah Sesuai Sunnah',
+        speaker: 'Ust. H. Syamsuddin, S.Ag.',
+        event_date: 'Ahad Pekan Ke-3',
+        event_time: '09:00 WITA',
+        description: 'Praktek langsung memandikan, mengkafani, menyalatkan, dan memakamkan jenazah.',
+      },
+      {
+        title: 'Santunan Anak Yatim & Dhuafa Bulanan',
+        speaker: 'Pengurus LAZIS Masjid Al-Hikmah',
+        event_date: 'Jumat Pekan Ke-4',
+        event_time: '16:00 WITA',
+        description: 'Penyaluran dana infaq dan paket sembako untuk 50 anak yatim dan keluarga kurang mampu.',
+      },
+      {
+        title: 'Kajian Tematik Subuh: Manajemen Waktu & Keberkahan Rezeki',
+        speaker: 'Ust. Syihabuddin, Lc., M.H.',
+        event_date: 'Sabtu Pagi',
+        event_time: '05:30 WITA',
+        description: 'Menggali rahasia rezeki yang berkah dan produktivitas pagi hari sesuai keteladanan Nabi.',
+      },
+    ];
+
+    dummyEvents.forEach((e) => {
+      insertEvent.run(e.title, e.speaker, e.event_date, e.event_time, e.description);
+    });
   }
 
+  // Populate Realistic Mosque Finances if fewer than 5 records exist
   const existingFinances = db.prepare('SELECT COUNT(*) as count FROM finances').get();
-  if (existingFinances.count === 0) {
+  if (existingFinances.count < 5) {
+    db.prepare('DELETE FROM finances').run();
     const insertFinance = db.prepare(`
       INSERT INTO finances (type, category, amount, description, date)
       VALUES (?, ?, ?, ?, ?)
     `);
-    insertFinance.run('income', 'Infaq Jumat', 12500000, 'Kotak Infaq Shalat Jumat Pekan Ini', '2026-08-01');
-    insertFinance.run('income', 'Donasi Operasional', 5000000, 'Hamba Allah via Transfer Bank', '2026-08-02');
-    insertFinance.run('expense', 'Listrik & Air', 2350000, 'Pembayaran Tagihan Listrik PLN & PDAM', '2026-08-02');
-    insertFinance.run('expense', 'Kebersihan & Taman', 1200000, 'Maintenance Karpet & Kebersihan Area Utama', '2026-08-02');
+
+    const dummyFinances = [
+      { type: 'income', category: 'Infaq Jumat', amount: 12850000, description: 'Kotak Infaq Shalat Jumat Pekan Pertama', date: '2026-08-01' },
+      { type: 'income', category: 'Infaq Subuh', amount: 3450000, description: 'Kotak Infaq Harian & Subuh Jamaah', date: '2026-08-02' },
+      { type: 'expense', category: 'Operasional', amount: 2450000, description: 'Tagihan Listrik PLN & Air PDAM Bulan Agustus', date: '2026-08-02' },
+      { type: 'expense', category: 'Kebersihan', amount: 1200000, description: 'Maintenance Kebersihan & Cuci Karpet Masjid', date: '2026-08-02' },
+      { type: 'income', category: 'Donasi', amount: 5000000, description: 'Donasi Hamba Allah via Transfer Kas Masjid', date: '2026-08-03' },
+      { type: 'expense', category: 'Bisyarah Ust.', amount: 2500000, description: 'Honor & Bisyarah Penceramah Kajian Rutin', date: '2026-08-03' },
+      { type: 'income', category: 'Infaq Jumat', amount: 14200000, description: 'Kotak Infaq Shalat Jumat Pekan Kedua', date: '2026-08-04' },
+      { type: 'expense', category: 'Pemeliharaan', amount: 1850000, description: 'Service & Maintenance AC Ruang Utama', date: '2026-08-04' },
+      { type: 'income', category: 'Kantin & Parkir', amount: 1650000, description: 'Pemasukan Kas Parkir & Kantin Masjid', date: '2026-08-05' },
+      { type: 'expense', category: 'Konsumsi', amount: 850000, description: 'Konsumsi Snacking Jamaah Kajian Subuh', date: '2026-08-05' },
+    ];
+
+    dummyFinances.forEach((f) => {
+      insertFinance.run(f.type, f.category, f.amount, f.description, f.date);
+    });
   }
 }
 
