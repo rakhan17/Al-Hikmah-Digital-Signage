@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import type { MosqueEvent } from '../types/signage';
 
 interface EventCarouselProps {
@@ -9,17 +9,7 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFastRewind, setIsFastRewind] = useState(false);
   const [bannerImages, setBannerImages] = useState<string[]>([]);
-
-  useEffect(() => {
-    fetch('/api/banner-images')
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && Array.isArray(json.images) && json.images.length > 0) {
-          setBannerImages(json.images);
-        }
-      })
-      .catch((err) => console.error('Failed to load banner images:', err));
-  }, []);
+  const [assignedImages, setAssignedImages] = useState<Record<string | number, string>>({});
 
   const activeEvents = events && events.length > 0 ? events : [
     {
@@ -33,15 +23,59 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
     }
   ];
 
+  // Helper to shuffle & assign random background images to events
+  const randomizeImages = useCallback((images: string[], eventItems: MosqueEvent[]) => {
+    if (!images || images.length === 0) return;
+
+    // Fisher-Yates shuffle algorithm for true randomness
+    const shuffled = [...images];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    const mapping: Record<string | number, string> = {};
+    eventItems.forEach((item, idx) => {
+      const key = item.id !== undefined && item.id !== 0 ? item.id : `idx-${idx}`;
+      mapping[key] = shuffled[idx % shuffled.length];
+    });
+
+    setAssignedImages(mapping);
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/banner-images')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.images) && json.images.length > 0) {
+          setBannerImages(json.images);
+          randomizeImages(json.images, activeEvents);
+        }
+      })
+      .catch((err) => console.error('Failed to load banner images:', err));
+  }, []);
+
+  // Re-randomize whenever activeEvents change length or list
+  useEffect(() => {
+    if (bannerImages.length > 0) {
+      randomizeImages(bannerImages, activeEvents);
+    }
+  }, [events, bannerImages, randomizeImages]);
+
+  // Carousel rotation timer with fast rewind & background re-randomization on loop
   useEffect(() => {
     if (activeEvents.length <= 1) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => {
         if (prevIndex >= activeEvents.length - 1) {
-          // Fast rewind straight back to Slide 0 passing through all slides quickly!
+          // Fast rewind back to start & randomize images for next cycle!
           setIsFastRewind(true);
           setTimeout(() => setIsFastRewind(false), 500);
+
+          if (bannerImages.length > 0) {
+            randomizeImages(bannerImages, activeEvents);
+          }
           return 0;
         } else {
           setIsFastRewind(false);
@@ -51,9 +85,13 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
     }, 7000);
 
     return () => clearInterval(interval);
-  }, [activeEvents.length]);
+  }, [activeEvents.length, bannerImages, activeEvents, randomizeImages]);
 
-  const getBgImage = (idx: number) => {
+  const getBgImage = (item: MosqueEvent, idx: number) => {
+    const key = item.id !== undefined && item.id !== 0 ? item.id : `idx-${idx}`;
+    if (assignedImages[key]) {
+      return assignedImages[key];
+    }
     if (bannerImages.length > 0) {
       return bannerImages[idx % bannerImages.length];
     }
@@ -64,7 +102,7 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
 
   return (
     <div className="carousel-container-minimal">
-      {/* Horizontal Filmstrip Track (Fast Rewind 0.4s when returning to start) */}
+      {/* Horizontal Filmstrip Track */}
       <div
         className="carousel-track-flex"
         style={{
@@ -84,7 +122,7 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
             style={{
               width: `${100 / totalCards}%`,
               height: '100%',
-              backgroundImage: `url(${getBgImage(idx)})`,
+              backgroundImage: `url("${getBgImage(eventItem, idx)}")`,
             }}
           >
             <div className="carousel-slide-overlay">
