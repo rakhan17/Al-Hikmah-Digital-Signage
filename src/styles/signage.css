@@ -808,7 +808,37 @@ body {
   background: #27272a;
 }
 
-/* ADMIN PANEL BUTTON STYLING */
+/* STAT CARDS (Laporan Keuangan Kas) */
+.stat-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.stat-card {
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #a1a1aa;
+  letter-spacing: 1px;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin-top: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* BUTTON STYLING */
 button {
   font-family: inherit;
   outline: none;
@@ -895,33 +925,53 @@ button {
   color: #ffffff;
 }
 
-.btn-icon.danger {
-  background: rgba(239, 68, 68, 0.12);
-  border-color: rgba(239, 68, 68, 0.25);
-  color: #f87171;
+.pill-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
-.btn-icon.danger:hover {
-  background: rgba(239, 68, 68, 0.3);
+.pill-badge.income {
+  background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* ADMIN TABLES */
-.admin-table-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  margin-top: 16px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.pill-badge.expense {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-.admin-table {
+.status-toggle-btn {
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.status-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* DATA TABLES (ADMIN DATA TABLES & SPACING) */
+.data-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  margin-top: 16px;
 }
 
-.admin-table th {
+.data-table th {
   padding: 16px 20px;
   background: #18181b;
   color: #a1a1aa;
@@ -932,13 +982,13 @@ button {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.admin-table td {
+.data-table td {
   padding: 16px 20px;
   color: #e4e4e7;
   font-size: 0.92rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.admin-table tr:hover td {
-  background: rgba(255, 255, 255, 0.02);
+.data-table tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
 }
