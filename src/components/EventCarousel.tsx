@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { MosqueEvent } from '../types/signage';
 
 interface EventCarouselProps {
@@ -10,6 +10,8 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
   const [isFastRewind, setIsFastRewind] = useState(false);
   const [bannerImages, setBannerImages] = useState<string[]>([]);
   const [assignedImages, setAssignedImages] = useState<Record<string | number, string>>({});
+
+  const imageMapRef = useRef<Record<string | number, string>>({});
 
   const activeEvents = events && events.length > 0 ? events : [
     {
@@ -23,59 +25,94 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
     }
   ];
 
-  // Helper to shuffle & assign random background images to events
-  const randomizeImages = useCallback((images: string[], eventItems: MosqueEvent[]) => {
-    if (!images || images.length === 0) return;
-
-    // Fisher-Yates shuffle algorithm for true randomness
-    const shuffled = [...images];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-
-    const mapping: Record<string | number, string> = {};
-    eventItems.forEach((item, idx) => {
-      const key = item.id !== undefined && item.id !== 0 ? item.id : `idx-${idx}`;
-      mapping[key] = shuffled[idx % shuffled.length];
-    });
-
-    setAssignedImages(mapping);
-  }, []);
-
+  // Fetch available banner images from /api/banner-images
   useEffect(() => {
     fetch('/api/banner-images')
       .then((res) => res.json())
       .then((json) => {
         if (json.success && Array.isArray(json.images) && json.images.length > 0) {
           setBannerImages(json.images);
-          randomizeImages(json.images, activeEvents);
         }
       })
       .catch((err) => console.error('Failed to load banner images:', err));
   }, []);
 
-  // Re-randomize whenever activeEvents change length or list
+  // Unique non-repeating image assignment algorithm
   useEffect(() => {
-    if (bannerImages.length > 0) {
-      randomizeImages(bannerImages, activeEvents);
-    }
-  }, [events, bannerImages, randomizeImages]);
+    if (!bannerImages || bannerImages.length === 0) return;
 
-  // Carousel rotation timer with fast rewind & background re-randomization on loop
+    const currentMap = { ...imageMapRef.current };
+
+    // Track active event keys & currently used images
+    const activeKeys = new Set<string | number>();
+    const usedImages = new Set<string>();
+
+    activeEvents.forEach((item, idx) => {
+      const key = item.id !== undefined && item.id !== 0 ? item.id : `idx-${idx}`;
+      activeKeys.add(key);
+      if (currentMap[key]) {
+        usedImages.add(currentMap[key]);
+      }
+    });
+
+    // Clean up deleted events from map so their images become available again
+    Object.keys(currentMap).forEach((k) => {
+      const numK = Number(k);
+      const isNum = !isNaN(numK);
+      if (!activeKeys.has(k) && (!isNum || !activeKeys.has(numK))) {
+        delete currentMap[k];
+      }
+    });
+
+    // Build pool of available images not used by any active banner
+    let unusedPool = bannerImages.filter((img) => !usedImages.has(img));
+
+    // Assign unique random image to any new banner that doesn't have one yet
+    activeEvents.forEach((item, idx) => {
+      const key = item.id !== undefined && item.id !== 0 ? item.id : `idx-${idx}`;
+
+      if (!currentMap[key]) {
+        // If unusedPool is empty, replenish from all bannerImages minus currently used
+        if (unusedPool.length === 0) {
+          const currentlyUsed = new Set(Object.values(currentMap));
+          unusedPool = bannerImages.filter((img) => !currentlyUsed.has(img));
+          
+          // If still empty (e.g. more banners than images), reset pool to full list
+          if (unusedPool.length === 0) {
+            unusedPool = [...bannerImages];
+          }
+        }
+
+        // Pick a random image from unusedPool
+        const randomIndex = Math.floor(Math.random() * unusedPool.length);
+        const chosenImage = unusedPool[randomIndex];
+
+        // Remove chosenImage from unusedPool so next banner won't pick it
+        unusedPool.splice(randomIndex, 1);
+        usedImages.add(chosenImage);
+
+        currentMap[key] = chosenImage;
+      }
+    });
+
+    imageMapRef.current = currentMap;
+    setAssignedImages({ ...currentMap });
+  }, [bannerImages, events]);
+
+  const totalCards = activeEvents.length;
+
+  // Smooth Carousel Rotation Timer (7 seconds per slide, fast rewind to 0 on loop)
   useEffect(() => {
-    if (activeEvents.length <= 1) return;
+    if (totalCards <= 1) {
+      setCurrentIndex(0);
+      return;
+    }
 
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => {
-        if (prevIndex >= activeEvents.length - 1) {
-          // Fast rewind back to start & randomize images for next cycle!
+        if (prevIndex >= totalCards - 1) {
           setIsFastRewind(true);
           setTimeout(() => setIsFastRewind(false), 500);
-
-          if (bannerImages.length > 0) {
-            randomizeImages(bannerImages, activeEvents);
-          }
           return 0;
         } else {
           setIsFastRewind(false);
@@ -85,7 +122,7 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
     }, 7000);
 
     return () => clearInterval(interval);
-  }, [activeEvents.length, bannerImages, activeEvents, randomizeImages]);
+  }, [totalCards]);
 
   const getBgImage = (item: MosqueEvent, idx: number) => {
     const key = item.id !== undefined && item.id !== 0 ? item.id : `idx-${idx}`;
@@ -97,8 +134,6 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
     }
     return '/assets/bg.jpeg';
   };
-
-  const totalCards = activeEvents.length;
 
   return (
     <div className="carousel-container-minimal">
