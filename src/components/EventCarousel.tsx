@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { MosqueEvent } from '../types/signage';
 
 interface EventCarouselProps {
@@ -17,6 +18,7 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
   const [assignedImages, setAssignedImages] = useState<Record<string | number, string>>({});
 
   const imageMapRef = useRef<Record<string | number, string>>({});
+  const touchStartX = useRef<number | null>(null);
 
   // 1. Mandatory Welcome Banner at Start (7s duration)
   const welcomeSlide: SlideItem = {
@@ -45,10 +47,11 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
 
   // Combine slides: [Welcome] -> [Middle Event Slides (if any)] -> [Donation Poster]
   const middleEvents: SlideItem[] = events && events.length > 0
-    ? events.map(e => ({ ...e, durationSec: 7 }))
+    ? events.map((e) => ({ ...e, durationSec: 7 }))
     : [];
 
   const activeSlides: SlideItem[] = [welcomeSlide, ...middleEvents, donationSlide];
+  const totalCards = activeSlides.length;
 
   // Fetch available banner images from /api/banner-images
   useEffect(() => {
@@ -68,7 +71,6 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
 
     const currentMap = { ...imageMapRef.current };
 
-    // Track active event keys & currently used images
     const activeKeys = new Set<string | number>();
     const usedImages = new Set<string>();
 
@@ -80,7 +82,6 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
       }
     });
 
-    // Clean up deleted events from map so their images become available again
     Object.keys(currentMap).forEach((k) => {
       const numK = Number(k);
       const isNum = !isNaN(numK);
@@ -89,10 +90,8 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
       }
     });
 
-    // Build pool of available images not used by any active banner
     let unusedPool = bannerImages.filter((img) => !usedImages.has(img));
 
-    // Assign unique random image to any banner that doesn't have one yet
     activeSlides.forEach((item, idx) => {
       const key = item.id !== undefined ? item.id : `idx-${idx}`;
 
@@ -119,8 +118,6 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
     setAssignedImages({ ...currentMap });
   }, [bannerImages, events]);
 
-  const totalCards = activeSlides.length;
-
   // Dynamic Slide Timer (7s for regular/event slides, 5s for Donation Poster slide)
   useEffect(() => {
     if (activeSlides.length <= 1) return;
@@ -144,6 +141,63 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
     return () => clearTimeout(timer);
   }, [currentIndex, activeSlides.length]);
 
+  // Manual Navigation Handlers
+  const handlePrev = () => {
+    setIsFastRewind(false);
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : totalCards - 1));
+  };
+
+  const handleNext = () => {
+    setIsFastRewind(false);
+    setCurrentIndex((prev) => (prev < totalCards - 1 ? prev + 1 : 0));
+  };
+
+  const handleSelectSlide = (idx: number) => {
+    setIsFastRewind(false);
+    setCurrentIndex(idx);
+  };
+
+  // Keyboard Navigation (Arrow Left & Arrow Right)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const targetTag = (e.target as HTMLElement)?.tagName?.toUpperCase();
+      if (targetTag === 'INPUT' || targetTag === 'TEXTAREA' || targetTag === 'SELECT') {
+        return;
+      }
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        handlePrev();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        handleNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [totalCards]);
+
+  // Touch Swipe Handlers for Mobile / Touchscreens
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX.current - touchEndX;
+
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
+    touchStartX.current = null;
+  };
+
   const getBgImage = (item: SlideItem, idx: number) => {
     const key = item.id !== undefined ? item.id : `idx-${idx}`;
     if (assignedImages[key]) {
@@ -156,7 +210,11 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
   };
 
   return (
-    <div className="carousel-container-minimal">
+    <div
+      className="carousel-container-minimal"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Horizontal Filmstrip Track */}
       <div
         className="carousel-track-flex"
@@ -268,13 +326,38 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
         ))}
       </div>
 
-      {/* Synchronized Dot Indicators */}
+      {/* Manual Left / Right Navigation Glass Arrow Buttons */}
+      {totalCards > 1 && (
+        <>
+          <button
+            onClick={handlePrev}
+            className="carousel-nav-btn prev"
+            title="Banner Sebelumnya (Panah Kiri)"
+            aria-label="Previous Slide"
+          >
+            <ChevronLeft size={24} />
+          </button>
+
+          <button
+            onClick={handleNext}
+            className="carousel-nav-btn next"
+            title="Banner Selanjutnya (Panah Kanan)"
+            aria-label="Next Slide"
+          >
+            <ChevronRight size={24} />
+          </button>
+        </>
+      )}
+
+      {/* Synchronized Clickable Dot Indicators */}
       {totalCards > 1 && (
         <div className="carousel-dots">
           {activeSlides.map((_, idx) => (
             <span
               key={idx}
+              onClick={() => handleSelectSlide(idx)}
               className={`dot ${idx === currentIndex ? 'active' : ''}`}
+              title={`Buka Banner ${idx + 1}`}
             />
           ))}
         </div>
