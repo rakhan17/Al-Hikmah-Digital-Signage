@@ -136,7 +136,7 @@ app.get('/api/settings', (req, res) => {
   }
 });
 
-app.put('/api/settings', (req, res) => {
+const handleUpdateSettings = (req, res) => {
   try {
     const {
       mosque_name,
@@ -261,7 +261,10 @@ app.put('/api/settings', (req, res) => {
     console.error('Update settings error:', err);
     res.status(500).json({ success: false, message: err.message });
   }
-});
+};
+
+app.put('/api/settings', handleUpdateSettings);
+app.post('/api/settings', handleUpdateSettings);
 
 // -------------------------------------------------------------
 // RUNNING TEXTS CRUD API
@@ -468,9 +471,9 @@ app.delete('/api/finances/:id', (req, res) => {
   }
 });
 
+// -------------------------------------------------------------
+// START SERVER
+// -------------------------------------------------------------
 app.listen(PORT, () => {
-  console.log(`===================================================`);
-  console.log(`Al Hikmah Digital Signage Backend Server Active`);
-  console.log(`URL: http://localhost:${PORT}`);
-  console.log(`===================================================`);
+  console.log(`[Backend Server] Running on http://localhost:${PORT}`);
 });

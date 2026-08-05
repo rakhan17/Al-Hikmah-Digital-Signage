@@ -132,7 +132,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setSavingSettings(true);
     try {
       const res = await fetch('/api/settings', {
-        method: 'POST',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settingsForm),
       });
@@ -147,6 +147,23 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       showToast('Koneksi server terganggu', 'error');
     } finally {
       setSavingSettings(false);
+    }
+  };
+
+  const handleToggleDevModeSwitch = () => {
+    if (!showAdvancedDevMode) {
+      const pass = window.prompt('Masukkan Kode Verifikasi Teknisi (Password):');
+      if (pass === '17oktober2009') {
+        setShowAdvancedDevMode(true);
+        setSettingsForm((prev) => ({ ...prev, use_custom_datetime: 1 }));
+        showToast('Akses Teknisi Diberikan! Mode Lanjutan & Simulator Aktif.');
+      } else if (pass !== null) {
+        showToast('Kode verifikasi salah! Akses ditolak.', 'error');
+      }
+    } else {
+      setShowAdvancedDevMode(false);
+      setSettingsForm((prev) => ({ ...prev, use_custom_datetime: 0 }));
+      showToast('Mode Lanjutan Dikunci Kembali (Mode Otomatis Real-Time).');
     }
   };
 
@@ -500,12 +517,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#f87171', fontWeight: 800, fontSize: '1.05rem' }}>
                       <AlertTriangle size={20} />
-                      <span>AREA LANJUTAN & SIMULATOR TEKNIS</span>
+                      <span>AREA LANJUTAN & SIMULATOR TEKNIS (MANUAL MODE)</span>
                     </div>
                     <button
                       type="button"
                       className="btn-secondary"
-                      onClick={() => setShowAdvancedDevMode(false)}
+                      onClick={handleToggleDevModeSwitch}
                       style={{ padding: '6px 14px', fontSize: '0.82rem' }}
                     >
                       Sembunyikan / Kunci Mode Lanjutan
@@ -617,7 +634,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
                 <button
                   type="button"
-                  onClick={() => setShowAdvancedDevMode((prev) => !prev)}
+                  onClick={handleToggleDevModeSwitch}
                   style={{
                     flex: 1,
                     padding: '12px 20px',
