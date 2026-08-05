@@ -6,6 +6,7 @@ interface EventCarouselProps {
 }
 
 interface SlideItem extends MosqueEvent {
+  isWelcome?: boolean;
   isDonation?: boolean;
   durationSec?: number;
 }
@@ -19,7 +20,7 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
   const imageMapRef = useRef<Record<string | number, string>>({});
   const touchStartX = useRef<number | null>(null);
 
-  // 1. Mandatory Welcome Banner at Start (7s duration)
+  // 1. Mandatory Opening Welcome Banner at Start (7s duration, uses /assets/opening.jpeg)
   const welcomeSlide: SlideItem = {
     id: -100,
     title: 'Selamat Datang di Masjid Al Hikmah',
@@ -28,10 +29,11 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
     event_time: '24 Jam',
     description: 'Jagalah ketertiban, kebersihan, dan kekhusyukan selama berada di lingkungan masjid.',
     is_active: 1,
+    isWelcome: true,
     durationSec: 7,
   };
 
-  // 2. Mandatory Donation Poster Banner at End (5s duration)
+  // 2. Mandatory Donation Poster Banner at End (5s duration, uses /assets/qris.jpeg)
   const donationSlide: SlideItem = {
     id: -200,
     title: 'Infaq & Donasi Digital Masjid Al Hikmah',
@@ -198,6 +200,9 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
   };
 
   const getBgImage = (item: SlideItem, idx: number) => {
+    if (item.isWelcome) {
+      return '/assets/opening.jpeg';
+    }
     if (item.isDonation) {
       return '/assets/qris.jpeg';
     }
@@ -277,7 +282,7 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
                   Salurkan infaq & sedekah terbaik Anda untuk kemakmuran dan operasional masjid.
                 </div>
 
-                {/* Direct Black Text Bank Account Details (No Card Box, Pure Clean Text) */}
+                {/* Direct Black Text Bank Account Details */}
                 <div style={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -298,7 +303,7 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
                 </div>
               </div>
             ) : (
-              /* REGULAR WELCOME / EVENT BANNER SLIDE (Dark Gradient Overlay, White Text) */
+              /* REGULAR WELCOME (opening.jpeg) / EVENT BANNER SLIDE (Dark Gradient Overlay, White Text) */
               <div className="carousel-slide-overlay">
                 <h2 className="carousel-title">{slideItem.title}</h2>
 
