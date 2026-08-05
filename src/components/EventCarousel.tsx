@@ -216,6 +216,8 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
     return '/assets/bg.jpeg';
   };
 
+  const isSpecialSlide = activeSlides[currentIndex]?.isWelcome || activeSlides[currentIndex]?.isDonation;
+
   return (
     <div
       className="carousel-container-minimal"
@@ -247,48 +249,53 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
               backgroundPosition: 'center',
             }}
           >
-            {/* 1. ELEGANT CLEAN OPENING WELCOME BANNER (No Pill Card Badges, Gold Arabic Calligraphy Top, Clean Grand Title & Description) */}
+            {/* 1. BESPOKE CENTERED OPENING WELCOME BANNER (No dark gradient overlay, 100% centered text, golden Arabic calligraphy, crisp shadow) */}
             {slideItem.isWelcome ? (
-              <div className="carousel-slide-overlay" style={{
-                background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.85) 90%)',
-                padding: '48px 60px',
+              <div style={{
+                width: '100%',
+                height: '100%',
+                background: 'transparent',
+                padding: '40px 60px',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'flex-end',
-                alignItems: 'flex-start',
-                textAlign: 'left',
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center',
               }}>
+                {/* Royal Golden Arabic Greeting */}
                 <div style={{
                   fontFamily: "'Amiri', serif",
-                  fontSize: '2.2rem',
+                  fontSize: '3.6rem',
                   fontWeight: 700,
                   color: '#fef08a',
-                  marginBottom: 6,
-                  textShadow: '0 2px 12px rgba(0,0,0,0.9)',
-                  letterSpacing: '1px',
+                  marginBottom: 12,
+                  textShadow: '0 4px 25px rgba(0,0,0,0.95), 0 2px 8px rgba(0,0,0,0.9)',
+                  lineHeight: 1.2,
                 }}>
                   أَهْلًا وَسَهْلًا وَمَرْحَبًا بِكُمْ
                 </div>
 
+                {/* Grand Centered Title */}
                 <h2 style={{
-                  fontSize: '3.4rem',
-                  fontWeight: 800,
+                  fontSize: '3.8rem',
+                  fontWeight: 900,
                   color: '#ffffff',
                   lineHeight: 1.15,
-                  marginBottom: 14,
-                  letterSpacing: '-0.8px',
-                  textShadow: '0 4px 24px rgba(0,0,0,0.95)',
+                  marginBottom: 16,
+                  letterSpacing: '-1px',
+                  textShadow: '0 6px 30px rgba(0,0,0,0.95), 0 2px 10px rgba(0,0,0,0.9)',
                 }}>
                   {slideItem.title}
                 </h2>
 
+                {/* Clean Centered Description */}
                 <p style={{
-                  fontSize: '1.25rem',
-                  fontWeight: 500,
-                  color: '#e4e4e7',
+                  fontSize: '1.35rem',
+                  fontWeight: 600,
+                  color: '#f4f4f5',
                   lineHeight: 1.5,
-                  maxWidth: '820px',
-                  textShadow: '0 2px 10px rgba(0,0,0,0.9)',
+                  maxWidth: '850px',
+                  textShadow: '0 3px 15px rgba(0,0,0,0.95), 0 1px 5px rgba(0,0,0,0.9)',
                 }}>
                   {slideItem.description}
                 </p>
@@ -379,8 +386,8 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
         ))}
       </div>
 
-      {/* Synchronized Clickable Dot Indicators */}
-      {totalCards > 1 && (
+      {/* Synchronized Clickable Dot Indicators (HIDDEN ON OPENING & DONATION SLIDES) */}
+      {totalCards > 1 && !isSpecialSlide && (
         <div className="carousel-dots">
           {activeSlides.map((_, idx) => (
             <span
