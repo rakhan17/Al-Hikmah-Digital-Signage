@@ -573,7 +573,10 @@ body {
   100% { transform: translate3d(-100%, 0, 0); }
 }
 
-/* Fullscreen Admin Sidebar Layout */
+/* ============================================================= */
+/* FULLSCREEN ADMIN PANEL & WORKSPACE STYLING                    */
+/* ============================================================= */
+
 .admin-fullscreen-layout {
   position: fixed;
   inset: 0;
@@ -582,6 +585,7 @@ body {
   background: #09090b;
   width: 100vw;
   height: 100vh;
+  color: #ffffff;
 }
 
 .admin-sidebar {
@@ -732,6 +736,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 36px;
+  margin-bottom: 24px;
 }
 
 .card-section-title {
@@ -796,4 +801,144 @@ body {
   font-family: inherit;
   outline: none;
   transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: #ffffff;
+  background: #27272a;
+}
+
+/* ADMIN PANEL BUTTON STYLING */
+button {
+  font-family: inherit;
+  outline: none;
+}
+
+.btn-primary {
+  padding: 12px 24px;
+  background: #ffffff;
+  color: #000000;
+  font-weight: 700;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #e4e4e7;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-danger {
+  padding: 8px 14px;
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  font-weight: 700;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+  background: rgba(239, 68, 68, 0.3);
+  color: #ffffff;
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #d4d4d8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.btn-icon.danger {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.25);
+  color: #f87171;
+}
+
+.btn-icon.danger:hover {
+  background: rgba(239, 68, 68, 0.3);
+  color: #ffffff;
+}
+
+/* ADMIN TABLES */
+.admin-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-table th {
+  padding: 16px 20px;
+  background: #18181b;
+  color: #a1a1aa;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-table td {
+  padding: 16px 20px;
+  color: #e4e4e7;
+  font-size: 0.92rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.admin-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
 }
