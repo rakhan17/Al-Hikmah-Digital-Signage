@@ -21,11 +21,6 @@ app.use(express.json());
 const publicDir = path.join(__dirname, '../public');
 app.use(express.static(publicDir));
 
-const distDir = path.join(__dirname, '../dist');
-if (fs.existsSync(distDir)) {
-  app.use(express.static(distDir));
-}
-
 // -------------------------------------------------------------
 // DYNAMIC BANNER IMAGES API (Reads public/assets/bgbanner dynamically)
 // -------------------------------------------------------------
@@ -473,15 +468,7 @@ app.delete('/api/finances/:id', (req, res) => {
   }
 });
 
-// Fallback for SPA routing in production dist mode (Express 5 compatible syntax)
-if (fs.existsSync(distDir)) {
-  app.get('(.*)', (req, res, next) => {
-    if (req.path.startsWith('/api')) return next();
-    res.sendFile(path.join(distDir, 'index.html'));
-  });
-}
-
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
   console.log(`===================================================`);
   console.log(`Al Hikmah Digital Signage Backend Server Active`);
   console.log(`URL: http://localhost:${PORT}`);
