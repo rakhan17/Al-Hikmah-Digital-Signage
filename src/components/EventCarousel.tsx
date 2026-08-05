@@ -338,19 +338,20 @@ export const EventCarousel: React.FC<EventCarouselProps> = ({ events }) => {
                 <div style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: 8,
-                  fontSize: '1.2rem',
+                  gap: 6,
+                  fontSize: '1.35rem',
                   fontWeight: 800,
                   color: '#000000',
                 }}>
-                  <div style={{ fontSize: '0.9rem', color: '#3f3f46', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                    TRANSFER REKENING BANK:
+                  <div style={{ fontSize: '0.95rem', color: '#3f3f46', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 700 }}>
+                    TRANSFER REKENING INFAQ / SEDEKAH:
                   </div>
-                  <div>
-                    BSI: <span style={{ color: '#000000' }}>7123-4567-89</span> <span style={{ color: '#3f3f46', fontWeight: 600, fontSize: '1rem' }}>(a.n. Masjid Al Hikmah)</span>
+                  <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#000000', display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span>BSI:</span>
+                    <span style={{ fontFamily: 'monospace', fontSize: '1.75rem', color: '#000000', letterSpacing: '1.5px' }}>9118117112</span>
                   </div>
-                  <div>
-                    Mandiri: <span style={{ color: '#000000' }}>149-00-1234567-8</span> <span style={{ color: '#3f3f46', fontWeight: 600, fontSize: '1rem' }}>(a.n. Masjid Al Hikmah)</span>
+                  <div style={{ fontSize: '1.15rem', color: '#27272a', fontWeight: 700 }}>
+                    a.n. Masjid Al-Hikmah
                   </div>
                 </div>
               </div>
